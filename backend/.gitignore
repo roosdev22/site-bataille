@@ -1,0 +1,71 @@
+# =========================
+# ENVIRONNEMENT
+# =========================
+.env
+.env.*
+.venv/
+venv/
+env/
+
+# =========================
+# LOGS
+# =========================
+*.log
+logs/
+
+# =========================
+# MÉDIAS & STATIQUES
+# =========================
+mediafiles/
+staticfiles/
+
+# Si tu ne veux pas versionner les médias
+media/
+
+# =========================
+# BASE DE DONNÉES
+# =========================
+*.sqlite3
+db.sqlite3
+
+# =========================
+# PYTHON
+# =========================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+
+# =========================
+# NEXT.JS / NODE
+# =========================
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+
+# =========================
+# IDE
+# =========================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# =========================
+# OS
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# SÉCURITÉ
+# =========================
+*.pem
+*.key
+*.crt
+secrets.yml
+credentials.json

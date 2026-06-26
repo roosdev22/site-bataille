@@ -1,0 +1,25 @@
+{
+  "name": "Jean Bataille",
+  "title": "Journaliste Médical & Rédacteur Voyage",
+  "experience": "+10 ans d'expérience",
+  "experienceSub": "Journalisme médical & voyages",
+  "bio": [
+    "Avec plus d'une décennie d'expérience en rédaction médicale et journalisme de voyage, Jean a visité <strong>45+ pays</strong> et interviewé des centaines de professionnels de santé à travers le monde.",
+    "Son travail vise à rendre les sujets médicaux complexes accessibles à tous, tout en inspirant ses lecteurs à explorer le monde de manière sûre et enrichissante."
+  ],
+  "stats": [
+    { "number": "45+", "label": "Pays visités" },
+    { "number": "500+", "label": "Articles publiés" },
+    { "number": "2M+", "label": "Lecteurs dans le monde" }
+  ],
+  "timeline": [
+    { "year": "2014", "title": "Début du journalisme médical", "desc": "Premier article sur l'innovation en santé" },
+    { "year": "2016", "title": "Reportages voyages", "desc": "Exploration du tourisme médical en Asie" },
+    { "year": "2019", "title": "Reconnaissance", "desc": "Prix du meilleur journalisme médical" },
+    { "year": "2024", "title": "Rayonnement global", "desc": "Lancement de cette plateforme" }
+  ],
+  "expertise": [
+    "Rédaction Médicale", "Sécurité des Voyages", "Santé Publique",
+    "Bien-être", "Santé Numérique", "Aventure"
+  ]
+}
