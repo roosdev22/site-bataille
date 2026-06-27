@@ -293,15 +293,6 @@ SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = 'DENY'
 SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
-
-if not DEBUG:
-    # Production only
-    SECURE_SSL_REDIRECT = True
-    SECURE_HSTS_SECONDS = 31536000
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_PRELOAD = True
-    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-
 # =========================
 # LOGGING (Développement)
 # =========================
@@ -327,3 +318,16 @@ if DEBUG:
             },
         },
     }
+
+# =========================
+# RENDER.COM DEPLOYMENT
+# =========================
+
+import os
+
+SECURE_SSL_REDIRECT = not DEBUG
+SECURE_HSTS_SECONDS = 31536000 if not DEBUG else 0
+SECURE_HSTS_INCLUDE_SUBDOMAINS = not DEBUG
+SECURE_HSTS_PRELOAD = not DEBUG
+
+ALLOWED_HOSTS = ['*'] if DEBUG else os.getenv('RENDER_EXTERNAL_HOSTNAME', '').split(',')

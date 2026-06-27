@@ -33,6 +33,7 @@ Flask-Limiter==2.6.3
 flask-swagger==0.2.14
 flask-swagger-ui==4.11.1
 flatbuffers==25.12.19
+git-filter-repo==2.47.0
 gunicorn==26.0.0
 idna==3.18
 itsdangerous==2.1.2
@@ -80,3 +81,4 @@ waitress==2.1.2
 webencodings==0.5.1
 Werkzeug==2.3.8
 wrapt==2.2.2
+gunicorn
