@@ -206,7 +206,7 @@ async function handleDelete() {
   if (!post) return (
     <div className="text-center py-20 text-gray-400">
       <p className="text-sm">Article introuvable.</p>
-      <Link href="/admin/posts"><Button variant="link" className="text-xs mt-2">← Retour</Button></Link>
+      <Link href="/admin/posts"><Button variant="ghost" className="text-xs mt-2">← Retour</Button></Link>
     </div>
   );
 
