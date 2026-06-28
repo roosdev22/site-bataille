@@ -83,3 +83,4 @@ Werkzeug==2.3.8
 wrapt==2.2.2
 gunicorn
 dj-database-url
+dj-database-url
