@@ -143,7 +143,7 @@ export default function LoginForm() {
 
         <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
           <p className="text-xs text-blue-900">
-            <span className="font-semibold">💡 Info :</span> Pour accéder à cet
+            <span className="font-semibold"> Info :</span> Pour accéder à cet
             espace, contactez votre administrateur.
           </p>
         </div>
