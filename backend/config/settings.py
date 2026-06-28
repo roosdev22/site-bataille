@@ -120,16 +120,27 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # DATABASE (POSTGRESQL)
 # =========================
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": config('DB_NAME', default='site-bataille'),
-        "USER": config('DB_USER', default='bataille'),
-        "PASSWORD": config('DB_PASSWORD', default='bataille'),
-        "HOST": config('DB_HOST', default='localhost'),
-        "PORT": config('DB_PORT', default='5432', cast=int),
+import dj_database_url
+
+# Database
+if config('DATABASE_URL', default=None):
+    DATABASES = {
+        "default": dj_database_url.config(
+            default=config('DATABASE_URL'),
+            conn_max_age=600
+        )
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": config('DB_NAME', default='site-bataille'),
+            "USER": config('DB_USER', default='bataille'),
+            "PASSWORD": config('DB_PASSWORD', default='bataille'),
+            "HOST": config('DB_HOST', default='localhost'),
+            "PORT": config('DB_PORT', default='5432', cast=int),
+        }
+    }
 
 # =========================
 # CUSTOM USER MODEL
