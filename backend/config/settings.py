@@ -79,10 +79,7 @@ LANGUAGES = (
 MODELTRANSLATION_DEFAULT_LANGUAGE = 'fr'
 MODELTRANSLATION_LANGUAGES = ('fr', 'en', 'es', 'ht')
 
-# LIBRETRANSLATE_API_URL = config(
-#     "LIBRETRANSLATE_API_URL",
-#     default="http://localhost:5000"
-# )
+
 
 LIBRETRANSLATE_API_URL = config(
     "LIBRETRANSLATE_API_URL",
@@ -127,7 +124,9 @@ if config('DATABASE_URL', default=None):
     DATABASES = {
         "default": dj_database_url.config(
             default=config('DATABASE_URL'),
-            conn_max_age=600
+            conn_max_age=600,
+            ssl_require=True,
+
         )
     }
 else:
@@ -141,6 +140,13 @@ else:
             "PORT": config('DB_PORT', default='5432', cast=int),
         }
     }
+
+# =========================
+# SUPABASE STORAGE         
+# =========================
+
+SUPABASE_URL = config("SUPABASE_URL")
+SUPABASE_KEY = config("SUPABASE_KEY")
 
 # =========================
 # CUSTOM USER MODEL
@@ -208,7 +214,7 @@ USE_TZ = True
 # =========================
 
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'  # ← Pour collectstatic
+STATIC_ROOT = BASE_DIR / 'staticfiles' 
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
@@ -217,7 +223,6 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # CORS & CSRF SECURITY
 # =========================
 
-# En développement : permettre localhost
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = config(
     'CORS_ALLOWED_ORIGINS',
@@ -232,7 +237,7 @@ CSRF_TRUSTED_ORIGINS = config(
 )
 
 # En dev : relaxé, en prod : strict
-CSRF_COOKIE_SECURE = DEBUG == False      # False en dev, True en prod
+CSRF_COOKIE_SECURE = DEBUG == False 
 CSRF_COOKIE_HTTPONLY = False
 CSRF_COOKIE_SAMESITE = 'Lax'
 CSRF_COOKIE_PATH = '/'
