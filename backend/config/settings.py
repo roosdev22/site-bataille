@@ -150,6 +150,7 @@ else:
 SUPABASE_URL = config("SUPABASE_URL")
 SUPABASE_KEY = config("SUPABASE_KEY")
 
+
 # =========================
 # CUSTOM USER MODEL
 # =========================
