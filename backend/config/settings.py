@@ -227,16 +227,15 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # =========================
 
 # CORS & CSRF SECURITY
-CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = config(
     'CORS_ALLOWED_ORIGINS',
-    default='http://localhost:3000',  # ← RÉAJOUTER LE DEFAULT
+    default='http://localhost:3000',
     cast=Csv()
 )
 
 CSRF_TRUSTED_ORIGINS = config(
     'CSRF_TRUSTED_ORIGINS',
-    default='http://localhost:3000',  # ← RÉAJOUTER LE DEFAULT
+    default='http://localhost:3000',
     cast=Csv()
 )
 
