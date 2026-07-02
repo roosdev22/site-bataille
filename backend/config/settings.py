@@ -226,19 +226,26 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # CORS & CSRF SECURITY
 # =========================
 
+# CORS & CSRF SECURITY
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = config(
     'CORS_ALLOWED_ORIGINS',
-    default='http://localhost:3000,http://127.0.0.1:3000',
+    default='http://localhost:3000',  # ← RÉAJOUTER LE DEFAULT
     cast=Csv()
 )
 
 CSRF_TRUSTED_ORIGINS = config(
     'CSRF_TRUSTED_ORIGINS',
-    default='http://localhost:3000,http://127.0.0.1:3000',
+    default='http://localhost:3000',  # ← RÉAJOUTER LE DEFAULT
     cast=Csv()
 )
 
+# =========================
+# SUPABASE STORAGE         
+# =========================
+
+SUPABASE_URL = config("SUPABASE_URL", default="")  # ← AJOUTER DEFAULT
+SUPABASE_KEY = config("SUPABASE_KEY", default="")  # ← AJOUTER DEFAULT
 # En dev : relaxé, en prod : strict
 CSRF_COOKIE_SECURE = DEBUG == False 
 CSRF_COOKIE_HTTPONLY = False
