@@ -47,7 +47,7 @@ class SecurityHeadersMiddleware:
             "style-src 'self' 'unsafe-inline'; "      # Styles : votre site seulement
             "img-src 'self' data: https: blob:; "     # Images : votre site + données + https
             "font-src 'self'; "                       # Polices : votre site seulement
-            "connect-src 'self' http://localhost:3000; "  # Connexions API autorisées
+            "connect-src 'self' http://localhost:3000 https://site-bataille-yc85.vercel.app; "
             "frame-ancestors 'none'; "                # Interdit l'inclusion dans des iframes
             "base-uri 'self'; "                       # Base URL : votre site seulement
             "form-action 'self';"                     # Formulaires : votre site seulement
