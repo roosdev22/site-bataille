@@ -7,6 +7,7 @@ import { useRouter, usePathname } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import { useAuth } from "@/hooks/useAuth"
 import { SITE_CONFIG } from "@/utils/constants"
+import LanguageSwitcher from "@/components/sections/LanguageSwitcher";
 
 const publicNavItems = [
   { label: "Accueil", href: "/" },
@@ -136,7 +137,8 @@ export default function Header() {
           </nav>
 
           {/* CTA Desktop - Version contextuelle optimisée */}
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden md:flex items-center gap-3">  
+              <LanguageSwitcher />
             {isAuthenticated ? (
               <>
                 {/* Badge utilisateur */}
@@ -158,48 +160,6 @@ export default function Header() {
                     {user?.first_name || user?.email?.split("@")[0] || "Utilisateur"}
                   </span>
                 </div>
-                
-                {/* Bouton Dashboard (seulement si pas déjà sur le dashboard) */}
-                {!isDashboardPage && (
-                  <Link
-                    href={isAdmin ? "/admin" : "/writer"}
-                    className="bg-blue-500 text-white px-5 py-2.5 rounded-2xl text-sm font-semibold
-                      hover:bg-blue-600 transition-all duration-300 shadow-lg shadow-blue-500/10
-                      active:scale-95"
-                  >
-                    Dashboard
-                  </Link>
-                )}
-                
-                {/* Bouton Voir le site (seulement si sur le dashboard) */}
-                {isDashboardPage && (
-                  <Link
-                    href="/"
-                    className="px-5 py-2.5 rounded-2xl text-sm font-medium text-gray-600
-                      hover:text-[#1c1c2e] hover:bg-gray-50 transition-all duration-200"
-                  >
-                    Voir le site
-                  </Link>
-                )}
-                
-                {/* Bouton Déconnexion */}
-                <button
-                  onClick={handleLogout}
-                  disabled={isLoggingOut}
-                  className="px-5 py-2.5 rounded-2xl text-sm font-medium text-gray-500
-                    hover:text-red-500 hover:bg-red-50 transition-all duration-200
-                    disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isLoggingOut ? (
-                    <span className="flex items-center gap-2">
-                      <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                      </svg>
-                      Déconnexion...
-                    </span>
-                  ) : "Déconnexion"}
-                </button>
               </>
             ) : (
               <Link

@@ -107,12 +107,12 @@ async function performTokenRefresh(): Promise<void> {
       throw new Error(`Token refresh retourné status ${response.status}`)
     }
 
-    console.log("[API] ✅ Token refresh réussi")
+    console.log("[API]  Token refresh réussi")
     getAuthChannel()?.postMessage({
       type: "REFRESH_SUCCESS",
     })
   } catch (error) {
-    console.error("[API] ❌ Token refresh échoué:", error)
+    console.error("[API]  Token refresh échoué:", error)
     throw error
   }
 }
@@ -151,7 +151,7 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response: AxiosResponse) => {
     if (process.env.NODE_ENV === "development") {
-      console.log(`[API] ✅ ${response.status} ${response.config.url}`)
+      console.log(`[API]  ${response.status} ${response.config.url}`)
     }
     return response
   },
@@ -161,7 +161,7 @@ api.interceptors.response.use(
     const status = error.response?.status
     const url = config?.url || "unknown"
 
-    console.log(`[API] ❌ ${status} ${url}`, {
+    console.log(`[API]  ${status} ${url}`, {
       message: error.message,
       retryCount: config?._retryCount || 0,
     })
@@ -183,7 +183,7 @@ api.interceptors.response.use(
       return Promise.reject(error)
     }
 
-    // ✅ IMPORTANT: Ne PAS faire de refresh pour /users/me/
+    //  IMPORTANT: Ne PAS faire de refresh pour /users/me/
     // Cet endpoint est appelé au démarrage avant qu'il y ait une session
     // Si on essaie un refresh, on boucle et on redirige vers login
     const isCheckAuthEndpoint = url?.includes("/users/me")
