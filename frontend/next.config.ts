@@ -2,7 +2,6 @@
 const nextConfig = {
   images: {
     remotePatterns: [
-      // 🔧 Développement local
       {
         protocol: 'http',
         hostname: 'localhost',
@@ -15,17 +14,18 @@ const nextConfig = {
         port: '8000',
         pathname: '/media/**',
       },
-      //  Production
       {
         protocol: 'https',
         hostname: process.env.NEXT_PUBLIC_API_DOMAIN || 'api.example.com',
         pathname: '/media/**',
       },
     ],
-    // Optimisations
     formats: ['image/avif', 'image/webp'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+  },
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production',
   },
 };
 
