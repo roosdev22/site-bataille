@@ -22,10 +22,14 @@ class SecurityHeadersMiddleware:
     
     def __init__(self, get_response):
         self.get_response = get_response
-        # Construit la liste des origines autorisées une seule fois au démarrage
-        self.frontend_origins = " ".join(
-            getattr(settings, 'CORS_ALLOWED_ORIGINS', ['http://localhost:3000'])
-        )
+        origins = getattr(settings, 'CORS_ALLOWED_ORIGINS', ['http://localhost:3000'])
+        # Nettoie les valeurs — enlève tout préfixe éventuel
+        cleaned = []
+        for origin in origins:
+            if '=' in origin:
+                origin = origin.split('=', 1)[1]
+            cleaned.append(origin.strip())
+        self.frontend_origins = " ".join(cleaned)
         
     def __call__(self, request):
         response = self.get_response(request)
