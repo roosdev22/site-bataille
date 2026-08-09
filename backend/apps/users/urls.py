@@ -3,7 +3,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import (
-    # ✅ ENLEVÉ : CustomTokenObtainPairView, logout_view, LoginView
+    #  ENLEVÉ : CustomTokenObtainPairView, logout_view, LoginView
     RegisterView,
     ProfileView,
     ChangePasswordView,
@@ -16,7 +16,7 @@ router = DefaultRouter()
 router.register(r'admin/users', AdminUserViewSet, basename='admin-users')
 
 urlpatterns = [
-    # ✅ AUTHENTICATION - Maintenant dans config/urls.py
+    #  AUTHENTICATION - Maintenant dans config/urls.py
     path('auth/register/', RegisterView.as_view(), name='register'),
     
     # USER MANAGEMENT

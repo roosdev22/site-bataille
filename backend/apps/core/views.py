@@ -202,7 +202,7 @@ class CookieTokenRefreshView(TokenRefreshView):
         # Créer une copie MUTABLE des données
         data = dict(request.data) if request.data else {}
         
-        # ✅ Utiliser le token du cookie s'il n'est pas dans le body
+        #  Utiliser le token du cookie s'il n'est pas dans le body
         if not data.get('refresh') and refresh_token:
             data['refresh'] = refresh_token
         
@@ -212,7 +212,7 @@ class CookieTokenRefreshView(TokenRefreshView):
                 status=status.HTTP_400_BAD_REQUEST
             )
         
-        # ✅ Utiliser le serializer avec les données corrigées
+        #  Utiliser le serializer avec les données corrigées
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
         
@@ -233,7 +233,7 @@ class CookieTokenRefreshView(TokenRefreshView):
             'domain': settings.SIMPLE_JWT.get('AUTH_COOKIE_DOMAIN', None),
         }
         
-        # ✅ Mettre à jour le cookie access_token
+        #  Mettre à jour le cookie access_token
         response.set_cookie(
             key=settings.SIMPLE_JWT.get('AUTH_COOKIE', 'access_token'),
             value=serializer.validated_data['access'],
