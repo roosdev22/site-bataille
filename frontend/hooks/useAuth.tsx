@@ -80,52 +80,40 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   //  Vérifier l'authentification
  const checkAuth = useCallback(async () => {
   try {
-    console.log("🔍 Vérification authentification...");
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 10000);
 
-    const { data } = await api.get("/users/me/");
+    const { data } = await api.get("/users/me/", {
+      signal: controller.signal,
+    });
 
+    clearTimeout(timeout);
     setUser(mapApiUserToAuthUser(data));
   } catch (error: any) {
-    if (error.response?.status === 401) {
+    if (error.name === "CanceledError" || error.code === "ERR_CANCELED") {
+      console.warn("⏱ Auth timeout");
+    } else if (error.response?.status === 401) {
       console.log("👤 Utilisateur anonyme");
-      setUser(null);
-    } else {
-      console.error("Erreur auth:", error);
-      setUser(null);
     }
+    setUser(null);
   } finally {
     setLoading(false);
     setInitialized(true);
   }
 }, [mapApiUserToAuthUser]);
-
-  //  Initialization UNE FOIS au montage
-  useEffect(() => {
-    if (initialized) return;
-
-    const initAuth = async () => {
-      console.log("🚀 App démarrée, vérification authentification...");
-      await checkAuth();
-      console.log("✨ App prête!");
-    };
-
-    initAuth();
-  }, []); // ← VIDE : S'exécute UNE fois
-
   //  Login
   const login = useCallback(async (email: string, password: string) => {
     try {
-      console.log("🔑 Tentative de connexion...");
       const { data } = await api.post("/auth/login/", { email, password });
       
       const authUser = mapApiUserToAuthUser(data.user);
-      console.log("✅ Connecté:", authUser.email);
+      console.log(" Connecté:", authUser.email);
       setUser(authUser);
 
       return {};
     } catch (error: any) {
       const msg = error.response?.data?.detail || "Échec de connexion";
-      console.error("❌ Login échoué:", msg);
+      console.error(" Login échoué:", msg);
       return { error: msg };
     }
   }, [mapApiUserToAuthUser]);
@@ -133,13 +121,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   //  Logout
   const logout = useCallback(async () => {
     try {
-      console.log("🚪 Déconnexion...");
+      console.log(" Déconnexion...");
       await api.post("/auth/logout/");
     } catch (error) {
-      console.warn("⚠️ Erreur logout (mais on déconnecte quand même):", error);
+      console.warn(" Erreur logout (mais on déconnecte quand même):", error);
     } finally {
       setUser(null);
-      console.log("👋 Déconnecté");
+      console.log(" Déconnecté");
       
       if (typeof window !== "undefined") {
         // Utiliser replace au lieu de href pour éviter double redirection

@@ -92,7 +92,6 @@ function AuthGuard({ children }: { children: ReactNode }) {
   );
 }
 
-    // ✅ ROUTES AUTH (login/register) : Accessible à tous
     if (isAuthRoute(pathname)) {
       // Si connecté, rediriger vers dashboard
          if (isAuthenticated) {
@@ -109,7 +108,6 @@ function AuthGuard({ children }: { children: ReactNode }) {
       return
     }
 
-    // ❌ ROUTES PROTÉGÉES : Nécessitent login
     if (isProtectedRoute(pathname)) {
       if (!isAuthenticated) {
         const redirectUrl = `/login?next=${encodeURIComponent(pathname)}`
@@ -121,7 +119,6 @@ function AuthGuard({ children }: { children: ReactNode }) {
         return
       }
 
-      // ❌ ROUTE ADMIN : Vérifier le rôle
       if (isAdminRoute(pathname)) {
         if (user?.role !== 'admin') {
           if (redirectedTo.current !== '/writer') {
@@ -133,24 +130,21 @@ function AuthGuard({ children }: { children: ReactNode }) {
         }
       }
 
-      console.log("[🔐 AuthGuard] ✅ Route protégée, accès autorisé")
+      console.log("[🔐 AuthGuard]  Route protégée, accès autorisé")
       redirectedTo.current = null
     }
   }, [loading, pathname, isAuthenticated, user?.role, router])
 
-  // LOADING STATE
- if (loading && isProtectedRoute(pathname)) {
+if (loading) {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       <div className="text-center space-y-4">
         <div className="flex justify-center">
           <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-200 border-t-blue-600" />
         </div>
-
         <p className="text-gray-600 font-medium">
           Vérification de votre authentification...
         </p>
-
         <p className="text-gray-400 text-sm">
           Cela ne prendra que quelques secondes
         </p>
