@@ -60,7 +60,6 @@ TEMPLATES = [
     },
 ]
 
-APPEND_SLASH = False
 # Database
 import dj_database_url
 if config('DATABASE_URL', default=None):

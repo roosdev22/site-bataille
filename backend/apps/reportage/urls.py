@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import re_path
 from .views import (
     # Reportages
     ReportageListView,
@@ -15,47 +15,47 @@ from .views import (
 
 urlpatterns = [
     # ───────────────────────────────────────────────────────────
-    # MEDIA FILES (VIDÉOS/AUDIO) AJOUTE CES ROUTES
+    # MEDIA FILES (VIDÉOS/AUDIO) — slash optionnel : tolère le proxy Vercel
     # ───────────────────────────────────────────────────────────
-    path('media-files/',
-         MediaFileListView.as_view(),
-         name='media-file-list'),
-    
-    path('media-files/<uuid:media_id>/',
-         MediaFileDetailView.as_view(),
-         name='media-file-detail'),
+    re_path(r'^media-files/?$',
+            MediaFileListView.as_view(),
+            name='media-file-list'),
+
+    re_path(r'^media-files/(?P<media_id>[0-9a-fA-F-]+)/?$',
+            MediaFileDetailView.as_view(),
+            name='media-file-detail'),
 
     # ───────────────────────────────────────────────────────────
     # IMAGES OPTIMISÉES
     # ───────────────────────────────────────────────────────────
-    path('optimized-images/',
-         OptimizedImageListView.as_view(),
-         name='optimized-image-list'),
-    
-    path('optimized-images/<uuid:uuid>/',
-         OptimizedImageDetailView.as_view(),
-         name='optimized-image-detail'),
+    re_path(r'^optimized-images/?$',
+            OptimizedImageListView.as_view(),
+            name='optimized-image-list'),
+
+    re_path(r'^optimized-images/(?P<uuid>[0-9a-fA-F-]+)/?$',
+            OptimizedImageDetailView.as_view(),
+            name='optimized-image-detail'),
 
     # ───────────────────────────────────────────────────────────
     # REPORTAGES
     # ───────────────────────────────────────────────────────────
-    path('reportages/',
-         ReportageListView.as_view(),
-         name='reportage-list'),
-    
-    path('stats/', 
-         ReportageStatsView.as_view(),
-         name='reportage-stats'),
+    re_path(r'^reportages/?$',
+            ReportageListView.as_view(),
+            name='reportage-list'),
 
-    path('reportages/<slug:slug>/',
-         ReportageDetailView.as_view(),
-         name='reportage-detail'),
+    re_path(r'^stats/?$',
+            ReportageStatsView.as_view(),
+            name='reportage-stats'),
 
-    path('reportages/<slug:slug>/publish/',
-         ReportagePublishView.as_view(),
-         name='reportage-publish'),
+    re_path(r'^reportages/(?P<slug>[-\w]+)/?$',
+            ReportageDetailView.as_view(),
+            name='reportage-detail'),
 
-    path('reportages/<slug:slug>/record-view/',
-         ReportageRecordView.as_view(),
-         name='reportage-record-view'),
+    re_path(r'^reportages/(?P<slug>[-\w]+)/publish/?$',
+            ReportagePublishView.as_view(),
+            name='reportage-publish'),
+
+    re_path(r'^reportages/(?P<slug>[-\w]+)/record-view/?$',
+            ReportageRecordView.as_view(),
+            name='reportage-record-view'),
 ]
