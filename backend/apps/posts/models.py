@@ -6,9 +6,7 @@ from django.db import models
 from django.utils.text import slugify
 
 
-# ─────────────────────────────────────────────
 # Enums
-# ─────────────────────────────────────────────
 class PostLanguage(models.TextChoices):
     FR = "fr", "Français"
     EN = "en", "English"
@@ -35,9 +33,7 @@ class PostStatus(models.TextChoices):
     REJECTED  = "rejected",  "Rejeté"
 
 
-# ─────────────────────────────────────────────
 # Tag
-# ─────────────────────────────────────────────
 
 class Tag(models.Model):
     name = models.CharField(max_length=50, unique=True)
@@ -58,9 +54,7 @@ class Tag(models.Model):
 
 # apps/posts/models.py
 
-# ─────────────────────────────────────────────
 # Post QuerySet
-# ─────────────────────────────────────────────
 
 class PostQuerySet(models.QuerySet):
     """Requêtes personnalisées sur les articles."""
@@ -123,9 +117,7 @@ class PostManager(models.Manager):
         """ IMPORTANT : Délégation au QuerySet."""
         return self.get_queryset().with_relations()
 
-# ─────────────────────────────────────────────
 # Post
-# ─────────────────────────────────────────────
 
 class Post(models.Model):
     
@@ -152,7 +144,7 @@ class Post(models.Model):
     # Auteur
     author   = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        on_delete=models.PROTECT,          # jamais de suppression en cascade
+        on_delete=models.PROTECT,         
         related_name="posts",
     )
 
@@ -168,7 +160,7 @@ class Post(models.Model):
     # SEO
     meta_title       = models.CharField(max_length=70, blank=True)
     meta_description = models.CharField(max_length=160, blank=True)
-
+    cover_image_url = models.URLField(max_length=500, blank=True, null=True)
     # Timestamps
     created_at   = models.DateTimeField(auto_now_add=True)
     updated_at   = models.DateTimeField(auto_now=True)

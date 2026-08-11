@@ -7,9 +7,15 @@ from .models import Post, PostStatus, PostLanguage, Tag
 from apps.users.serializers import UserPublicSerializer
 
 
-# ─────────────────────────────────────────────
+def resolve_cover_image_url(obj, request=None):
+    if obj.cover_image_url:          # priorité à Supabase
+        return obj.cover_image_url
+    if obj.cover_image:              # sinon, repli sur le fichier local
+        url = obj.cover_image.url
+        return request.build_absolute_uri(url) if request else url
+    return None
+
 # Tag
-# ─────────────────────────────────────────────
 
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
@@ -30,8 +36,11 @@ class PostListSerializer(serializers.ModelSerializer):
     category_display = serializers.CharField(source="get_category_display", read_only=True)
     status_display = serializers.CharField(source="get_status_display", read_only=True)
     source_language = serializers.CharField(read_only=True)
-    cover_image = serializers.ImageField(read_only=True)
+    cover_image = serializers.SerializerMethodField()
 
+    def get_cover_image(self, obj):
+        request = self.context.get('request')
+        return resolve_cover_image_url(obj, request)
     class Meta:
         model = Post
         fields = [
@@ -45,7 +54,7 @@ class PostListSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         """
-        ✨ Retourne SEULEMENT la langue demandée
+         Retourne SEULEMENT la langue demandée
         GET /api/posts/?language=en → affiche title_en, excerpt_en
         """
         data = super().to_representation(instance)
@@ -58,9 +67,7 @@ class PostListSerializer(serializers.ModelSerializer):
         return data
 
 
-# ─────────────────────────────────────────────
 # Post — Detail (Lecture + Multilingue)
-# ─────────────────────────────────────────────
 
 class PostDetailSerializer(serializers.ModelSerializer):
     """Serializer pour le détail d'un article avec traductions complètes"""

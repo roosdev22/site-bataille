@@ -7,9 +7,7 @@ from datetime import timedelta
 from .models import Ad, AdFormat, AdCategory, Advertiser, AdImpression, AdClick, AdStatus
 
 
-# ─────────────────────────────────────────────
 # Public — ce que le frontend reçoit pour afficher une pub
-# ─────────────────────────────────────────────
 
 class AdPublicSerializer(serializers.ModelSerializer):
     """
@@ -19,14 +17,12 @@ class AdPublicSerializer(serializers.ModelSerializer):
     class Meta:
         model  = Ad
         fields = [
-            "id", "title", "image", "destination_url",
+            "id", "title", "image_url", "destination_url",
             "alt_text", "format",
         ]
 
 
-# ─────────────────────────────────────────────
 # Admin — Advertiser CRUD
-# ─────────────────────────────────────────────
 
 class AdvertiserSerializer(serializers.ModelSerializer):
     total_ads  = serializers.IntegerField(read_only=True)
@@ -55,13 +51,14 @@ class AdAdminSerializer(serializers.ModelSerializer):
     ctr             = serializers.FloatField(read_only=True)
     is_expired      = serializers.BooleanField(read_only=True)
     budget_exhausted = serializers.BooleanField(read_only=True)
-    image           = serializers.ImageField(required=False)  # ✅ Rendre l'image optionnelle
+    image           = serializers.ImageField(required=False) 
+    
 
     class Meta:
         model  = Ad
         fields = [
             "id", "advertiser", "advertiser_name",
-            "title", "image", "destination_url", "alt_text",
+            "title", "image", "image_url", "destination_url", "alt_text",
             "format", "target_category",
             "status", "priority",
             "start_date", "end_date",
@@ -71,12 +68,9 @@ class AdAdminSerializer(serializers.ModelSerializer):
             "created_at", "updated_at",
         ]
         read_only_fields = [
-            "id", "impressions_count", "clicks_count",
+            "id", "image_url","impressions_count", "clicks_count",
             "created_at", "updated_at",
         ]
-        extra_kwargs = {
-            "image": {"required": False},  # ✅ Optionnel dans les requêtes
-        }
 
     def validate(self, attrs):
         start = attrs.get("start_date", getattr(self.instance, "start_date", None))

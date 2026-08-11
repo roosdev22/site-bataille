@@ -16,12 +16,16 @@ logger = logging.getLogger(__name__)
 @receiver(post_save, sender=Ad)
 def upload_ad_image_to_supabase(sender, instance, created, **kwargs):
     """
-    À la sauvegarde d'une Ad, upload l'image vers Supabase.
+    À la sauvegarde d'une Ad, upload l'image vers Supabase
+    et enregistre l'URL publique dans image_url.
     """
     if not instance.image:
         logger.warning(f"[Ad] Pas d'image pour {instance.id}")
         return
-    
+
+    if instance.image_url:
+        return  # déjà uploadée, évite les ré-uploads en boucle
+
     try:
         if hasattr(instance.image, 'file') and instance.image.file:
             filename = f"{instance.id}_{uuid.uuid4().hex}.jpg"
@@ -29,9 +33,10 @@ def upload_ad_image_to_supabase(sender, instance, created, **kwargs):
                 instance.image.file,
                 filename
             )
-            
+
             if url:
                 logger.info(f"[Ad] Image uploadée: {url}")
-    
+                Ad.objects.filter(pk=instance.pk).update(image_url=url)
+
     except Exception as e:
         logger.error(f"[Ad] Erreur upload image: {e}")

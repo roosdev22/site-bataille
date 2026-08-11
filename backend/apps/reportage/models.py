@@ -159,7 +159,7 @@ class Quote(models.Model):
         ('center', 'Centré'),
         ('right', 'Droite'),
     ]
-    
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     text = models.TextField()
     author = models.CharField(max_length=255)
@@ -167,57 +167,68 @@ class Quote(models.Model):
     author_image = models.ImageField(upload_to='quotes/%Y/%m/', blank=True, null=True)
     source = models.CharField(max_length=500, blank=True, help_text="Livre, article, etc.")
     source_url = models.URLField(blank=True, help_text="Lien vers la source")
-    
+
     alignment = models.CharField(max_length=20, choices=ALIGNMENT_CHOICES, default='center')
     accent_color = models.CharField(max_length=7, default='#000000', help_text="Couleur d'accent (format hex)")
     background_color = models.CharField(max_length=7, default='#f5f5f5', blank=True)
+
     border_style = models.CharField(
         max_length=20,
         choices=[('left', 'Barre gauche'), ('top', 'Barre haut'), ('none', 'Aucune')],
         default='left'
     )
-    
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    
+
     class Meta:
         ordering = ['-created_at']
         verbose_name = "Citation"
         verbose_name_plural = "Citations"
-    
+
     def __str__(self):
         return f"'{self.text[:50]}...' — {self.author}"
 
-
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
 class OptimizedImage(models.Model):
     """
     Gestion centralisée et optimisée des images avec variantes WEBP auto-générées.
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    
+
     # Image originale source
     image = models.ImageField(
         upload_to='optimized_images/%Y/%m/%d/',
         help_text="Image source (sera convertie en WEBP pour les variantes)"
     )
-    
+
     # Variantes générées à la sauvegarde
     image_thumb = models.ImageField(upload_to='optimized_images/thumbs/%Y/%m/%d/', blank=True)
     image_small = models.ImageField(upload_to='optimized_images/small/%Y/%m/%d/', blank=True)
     image_medium = models.ImageField(upload_to='optimized_images/medium/%Y/%m/%d/', blank=True)
     image_large = models.ImageField(upload_to='optimized_images/large/%Y/%m/%d/', blank=True)
-    
+
+    # URLs Supabase (persistées après upload par le signal post_save)
+    image_url        = models.URLField(blank=True, editable=False, verbose_name="URL originale Supabase")
+    image_thumb_url  = models.URLField(blank=True, editable=False, verbose_name="URL thumbnail Supabase")
+    image_small_url  = models.URLField(blank=True, editable=False, verbose_name="URL small Supabase")
+    image_medium_url = models.URLField(blank=True, editable=False, verbose_name="URL medium Supabase")
+    image_large_url  = models.URLField(blank=True, editable=False, verbose_name="URL large Supabase")
+
     # Référencement et métadonnées
     alt_text = models.CharField(max_length=255, help_text="Texte alternatif (SEO / Accessibilité)")
     caption = models.CharField(max_length=500, blank=True, help_text="Légende de l'image")
     credit = models.CharField(max_length=255, blank=True, help_text="Crédits photographiques")
-    
+
     # Propriétés de l'image originale
     width = models.PositiveIntegerField(null=True, blank=True)
     height = models.PositiveIntegerField(null=True, blank=True)
     aspect_ratio = models.CharField(max_length=20, blank=True, editable=False)
     file_size = models.PositiveIntegerField(null=True, blank=True, help_text="Taille originale en bytes")
-    
+
     uploaded_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='optimized_images')
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
@@ -230,65 +241,57 @@ class OptimizedImage(models.Model):
             models.Index(fields=['uploaded_by']),
             models.Index(fields=['-uploaded_at']),
         ]
-    
+
     def __str__(self):
         return f"{self.alt_text or 'Image'} ({self.id})"
-    
+
     def save(self, *args, **kwargs):
         if self.image:
-            # Récupérer la taille du fichier d'origine
             try:
                 self.file_size = self.image.size
             except (AttributeError, ValueError):
                 pass
 
-            # Extraction et calcul des dimensions et du ratio
             if not self.width or not self.height:
                 img = Image.open(self.image)
                 self.width, self.height = img.size
-                
-                # Calcul et simplification du aspect_ratio (ex: 16:9)
+
                 divisor = gcd(self.width, self.height)
                 if divisor > 0:
                     self.aspect_ratio = f"{self.width // divisor}:{self.height // divisor}"
-            
-            # Définition des cibles de redimensionnement
+
             sizes = {
                 'thumb': (150, 150),
                 'small': (400, 300),
                 'medium': (800, 600),
                 'large': (1200, 900),
             }
-            
+
             for version, (max_width, max_height) in sizes.items():
                 self._create_resized_image(version, max_width, max_height)
-        
+
         super().save(*args, **kwargs)
-    
+
     def _create_resized_image(self, version, max_width, max_height):
         """Génère, convertit en WEBP et sauvegarde une variante spécifique."""
         try:
             img = Image.open(self.image)
             img.thumbnail((max_width, max_height), Image.Resampling.LANCZOS)
-            
+
             output = BytesIO()
             img.save(output, format='WEBP', quality=85, optimize=True)
             output.seek(0)
-            
+
             base_name = self.image.name.split('/')[-1].split('.')[0]
             filename = f"{base_name}_{version}.webp"
-            
+
             field_name = f"image_{version}"
             field = getattr(self, field_name)
             field.save(filename, ContentFile(output.read()), save=False)
         except Exception:
-            # Sécurité pour empêcher une interruption globale si le traitement d'image échoue
             pass
 
-
-# ═══════════════════════════════════════════════════════════════
 #   REPORTAGE PRINCIPAL & STATS
-# ═══════════════════════════════════════════════════════════════
 
 class Reportage(models.Model):
     """

@@ -5,9 +5,8 @@ from django.db import models
 from django.utils import timezone
 
 
-# ─────────────────────────────────────────────
 # Enums
-# ─────────────────────────────────────────────
+
 
 class AdFormat(models.TextChoices):
     BANNER_TOP      = "banner_top",      "Bannière haut de page"
@@ -41,10 +40,8 @@ class AdCategory(models.TextChoices):
     FINANCE    = "finance",    "Finance"
 
 
-# ─────────────────────────────────────────────
 # Advertiser  (profil de l'annonceur)
 # Géré par l'admin, pas de compte utilisateur
-# ─────────────────────────────────────────────
 
 class Advertiser(models.Model):
     id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -57,6 +54,7 @@ class Advertiser(models.Model):
     is_active    = models.BooleanField(default=True)
     created_at   = models.DateTimeField(auto_now_add=True)
     updated_at   = models.DateTimeField(auto_now=True)
+    image_url = models.URLField(blank=True, verbose_name="URL Supabase", editable=False)
 
     class Meta:
         verbose_name        = "Annonceur"
@@ -75,9 +73,7 @@ class Advertiser(models.Model):
         return self.ads.filter(status=AdStatus.ACTIVE).count()
 
 
-# ─────────────────────────────────────────────
 # Ad  (une publicité)
-# ─────────────────────────────────────────────
 
 class AdQuerySet(models.QuerySet):
     def active(self):
@@ -135,6 +131,7 @@ class Ad(models.Model):
     # Contenu
     title        = models.CharField(max_length=150, verbose_name="Titre de la pub")
     image        = models.ImageField(upload_to="ads/%Y/%m/", verbose_name="Image")
+    image_url    = models.URLField(blank=True, verbose_name="URL de l'image", editable=False)
     destination_url = models.URLField(verbose_name="URL de destination")
     alt_text     = models.CharField(max_length=200, blank=True, verbose_name="Texte alternatif")
 
