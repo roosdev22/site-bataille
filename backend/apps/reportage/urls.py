@@ -14,9 +14,7 @@ from .views import (
 )
 
 urlpatterns = [
-    # ───────────────────────────────────────────────────────────
     # MEDIA FILES (VIDÉOS/AUDIO) — slash optionnel : tolère le proxy Vercel
-    # ───────────────────────────────────────────────────────────
     re_path(r'^media-files/?$',
             MediaFileListView.as_view(),
             name='media-file-list'),
@@ -25,9 +23,7 @@ urlpatterns = [
             MediaFileDetailView.as_view(),
             name='media-file-detail'),
 
-    # ───────────────────────────────────────────────────────────
     # IMAGES OPTIMISÉES
-    # ───────────────────────────────────────────────────────────
     re_path(r'^optimized-images/?$',
             OptimizedImageListView.as_view(),
             name='optimized-image-list'),
@@ -36,9 +32,7 @@ urlpatterns = [
             OptimizedImageDetailView.as_view(),
             name='optimized-image-detail'),
 
-    # ───────────────────────────────────────────────────────────
     # REPORTAGES
-    # ───────────────────────────────────────────────────────────
     re_path(r'^reportages/?$',
             ReportageListView.as_view(),
             name='reportage-list'),

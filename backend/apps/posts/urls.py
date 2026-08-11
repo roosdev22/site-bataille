@@ -10,15 +10,13 @@ from .views import (
     DashboardView,
 )
 
-# ── Routers ───────────────────────────────────────────────────────────────────
 
-writer_router = DefaultRouter()
+writer_router = DefaultRouter(trailing_slash='/?')
 writer_router.register(r"posts", WriterPostViewSet, basename="writer-posts")
 
-admin_router = DefaultRouter()
+admin_router = DefaultRouter(trailing_slash='/?')
 admin_router.register(r"posts", AdminPostViewSet, basename="admin-posts")
 
-# ── URL patterns ──────────────────────────────────────────────────────────────
 
 urlpatterns = [
     # Public — slash optionnel : tolère le proxy Vercel

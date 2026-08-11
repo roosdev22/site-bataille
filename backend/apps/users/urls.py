@@ -11,7 +11,7 @@ from .views import (
 )
 
 # Router pour le ViewSet
-router = DefaultRouter()
+router = DefaultRouter(trailing_slash='/?')
 router.register(r'admin/users', AdminUserViewSet, basename='admin-users')
 
 urlpatterns = [

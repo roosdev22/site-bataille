@@ -11,12 +11,12 @@ from .views import (
     AdvertiserReportView,
 )
 
-# ── Routers ──
-admin_router = DefaultRouter()
+#  Routers 
+admin_router = DefaultRouter(trailing_slash='/?')
 admin_router.register(r"advertisers", AdvertiserViewSet, basename="advertisers")
 admin_router.register(r"ads", AdAdminViewSet, basename="admin-ads")
 
-# ── URL patterns ──
+#  URL patterns 
 urlpatterns = [
     #  PUBLIC ENDPOINTS (pas d'authentification) — slash optionnel : tolère le proxy Vercel
     re_path(r"^slot/?$", AdSlotView.as_view(), name="ad-slot"),

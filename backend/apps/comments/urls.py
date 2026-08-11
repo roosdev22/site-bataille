@@ -9,11 +9,10 @@ from .views import (
     AdminCommentViewSet,
 )
 
-admin_router = DefaultRouter()
+admin_router = DefaultRouter(trailing_slash='/?')
 admin_router.register(r"comments", AdminCommentViewSet, basename="admin-comments")
 
 urlpatterns = [
-    # ── Public / authentifié ──────────────────────────────────────────────
 
     # Liste des commentaires d'un article
     path(
@@ -42,6 +41,5 @@ urlpatterns = [
         name="comment-like",
     ),
 
-    # ── Admin ─────────────────────────────────────────────────────────────
     path("admin/", include(admin_router.urls)),
 ]
