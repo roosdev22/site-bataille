@@ -8,9 +8,9 @@ from apps.users.serializers import UserPublicSerializer
 
 
 def resolve_cover_image_url(obj, request=None):
-    if obj.cover_image_url:          # priorité à Supabase
+    if obj.cover_image_url:          
         return obj.cover_image_url
-    if obj.cover_image:              # sinon, repli sur le fichier local
+    if obj.cover_image:              
         url = obj.cover_image.url
         return request.build_absolute_uri(url) if request else url
     return None
@@ -24,9 +24,9 @@ class TagSerializer(serializers.ModelSerializer):
         read_only_fields = ["slug"]
 
 
-# ─────────────────────────────────────────────
+
 # Post — List (Léger + Multilingue)
-# ─────────────────────────────────────────────
+
 
 class PostListSerializer(serializers.ModelSerializer):
     """Serializer pour la liste des articles avec traduction automatique"""
@@ -182,9 +182,9 @@ class PostWriteSerializer(serializers.ModelSerializer):
         try:
             img = Image.open(value)
             width, height = img.size
-            if width < 800 or height < 400:
+            if width < 600 or height < 300:
                 raise serializers.ValidationError(
-                    f"L'image doit faire au moins 800×400px. "
+                    f"L'image doit faire au moins 600×400px. "
                     f"Dimensions actuelles : {width}×{height}px"
                 )
         except Exception as e:
