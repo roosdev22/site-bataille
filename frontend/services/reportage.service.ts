@@ -1,31 +1,99 @@
 // services/reportage.service.ts
 
-import api from "@/lib/api";  
+import axios from "axios";
+import api from "@/lib/api";
 import { ReportageForm, Bloc } from "@/types/reportage";
 
+// URL de base Supabase, nécessaire pour reconstruire l'URL publique après upload.
+// Doit être définie dans .env.local (NEXT_PUBLIC_SUPABASE_URL=https://xxxx.supabase.co)
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL as string;
+
+type BucketKey = 'optimized-images' | 'media-files';
+
+interface SignedUploadInfo {
+  signed_url: string;
+  token: string;
+  path: string;
+}
+
 export class ReportageService {
-  
-  static async uploadImage(
+
+  // ═══════════════════════════════════════════════════════════
+  //  UPLOAD DIRECT VERS SUPABASE (ne passe jamais par Render)
+  // ═══════════════════════════════════════════════════════════
+
+  /**
+   * Demande à Django une URL signée pour uploader un fichier
+   * directement vers Supabase Storage.
+   */
+  private static async getSignedUploadUrl(
+    bucket: BucketKey,
+    filename: string
+  ): Promise<SignedUploadInfo> {
+    const response = await api.post('/signed-upload-url/', { bucket, filename });
+    return response.data;
+  }
+
+  /**
+   * Upload un fichier directement vers Supabase via l'URL signée.
+   * Utilise axios brut (pas l'instance `api`) pour ne pas envoyer les
+   * cookies/headers d'auth Django vers le domaine Supabase.
+   */
+  private static async putFileToSignedUrl(
+    signedUrl: string,
     file: File,
-    altText: string = '',
     onProgress?: (progress: number) => void
-  ): Promise<{ id: string; url: string }> {
-    const formData = new FormData();
-    formData.append('image', file);
-    formData.append('alt_text', altText || file.name);
-    
-    const response = await api.post('/optimized-images/', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
+  ): Promise<void> {
+    await axios.put(signedUrl, file, {
+      headers: { 'Content-Type': file.type || 'application/octet-stream' },
       onUploadProgress: (event: any) => {
         if (event.total && onProgress) {
           onProgress(Math.round((event.loaded * 100) / event.total));
         }
       },
     });
-    
+  }
+
+  /**
+   * Construit l'URL publique Supabase à partir du bucket + path,
+   * sans appel réseau (les buckets sont publics).
+   */
+  private static buildPublicUrl(bucket: BucketKey, path: string): string {
+    return `${SUPABASE_URL}/storage/v1/object/public/${bucket}/${path}`;
+  }
+
+  /**
+   * Enchaîne les 3 étapes : URL signée -> upload direct -> URL publique.
+   */
+  private static async uploadDirect(
+    file: File,
+    bucket: BucketKey,
+    onProgress?: (progress: number) => void
+  ): Promise<string> {
+    const { signed_url, path } = await this.getSignedUploadUrl(bucket, file.name);
+    await this.putFileToSignedUrl(signed_url, file, onProgress);
+    return this.buildPublicUrl(bucket, path);
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  //  ENREGISTREMENT CÔTÉ DJANGO (après upload direct)
+  // ═══════════════════════════════════════════════════════════
+
+  static async uploadImage(
+    file: File,
+    altText: string = '',
+    onProgress?: (progress: number) => void
+  ): Promise<{ id: string; url: string }> {
+    const imageUrl = await this.uploadDirect(file, 'optimized-images', onProgress);
+
+    const response = await api.post('/optimized-images/', {
+      image_url: imageUrl,
+      alt_text: altText || file.name,
+    });
+
     return {
       id: response.data.id,
-      url: response.data.images?.original || response.data.url,
+      url: response.data.image_url,
     };
   }
 
@@ -33,35 +101,37 @@ export class ReportageService {
     file: File,
     onProgress?: (progress: number) => void
   ): Promise<{ id: string }> {
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('title', file.name);
-    formData.append('media_type', 'video');
-    
-    const response = await api.post('/media-files/', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-      onUploadProgress: (event: any) => {
-        if (event.total && onProgress) {
-          onProgress(Math.round((event.loaded * 100) / event.total));
-        }
-      },
+    const fileUrl = await this.uploadDirect(file, 'media-files', onProgress);
+
+    const response = await api.post('/media-files/', {
+      file_url: fileUrl,
+      title: file.name,
+      media_type: 'video',
+      file_size: file.size,
     });
-    
+
     return { id: response.data.id };
   }
 
-  static async uploadAudio(file: File): Promise<{ id: string }> {
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('title', file.name);
-    formData.append('media_type', 'audio');
-    
-    const response = await api.post('/media-files/', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
+  static async uploadAudio(
+    file: File,
+    onProgress?: (progress: number) => void
+  ): Promise<{ id: string }> {
+    const fileUrl = await this.uploadDirect(file, 'media-files', onProgress);
+
+    const response = await api.post('/media-files/', {
+      file_url: fileUrl,
+      title: file.name,
+      media_type: 'audio',
+      file_size: file.size,
     });
-    
+
     return { id: response.data.id };
   }
+
+  // ═══════════════════════════════════════════════════════════
+  //  ORCHESTRATION DE TOUS LES MÉDIAS DU FORMULAIRE
+  // ═══════════════════════════════════════════════════════════
 
   static async uploadAllMedia(
     form: ReportageForm,
@@ -106,7 +176,7 @@ export class ReportageService {
       }
 
       if (bloc.type === 'audio' && bloc.audio_fichier instanceof File) {
-        const { id } = await this.uploadAudio(bloc.audio_fichier);
+        const { id } = await this.uploadAudio(bloc.audio_fichier, (p) => onProgress?.(blocKey, p));
         bloc.audio_id = id;
         delete bloc.audio_fichier;
       }
@@ -130,6 +200,10 @@ export class ReportageService {
     return result;
   }
 
+  // ═══════════════════════════════════════════════════════════
+  //  PAYLOAD FINAL — JSON pur, plus aucun fichier
+  // ═══════════════════════════════════════════════════════════
+
   private static preparePayload(form: ReportageForm, mediaIds: { coverImageId?: string; ogImageId?: string; blocs: any[] }) {
     return {
       title: form.title,
@@ -142,7 +216,7 @@ export class ReportageService {
       ...(mediaIds.ogImageId && { og_image_id: mediaIds.ogImageId }),
       blocs: mediaIds.blocs.map((bloc: any, index: number) => {
         const clean: any = { type: bloc.type, ordre: index };
-        
+
         if (bloc.type === 'intro' || bloc.type === 'texte') clean.contenu = bloc.contenu || '';
         if (bloc.type === 'image') {
           clean.image_id = bloc.image_id;
@@ -173,7 +247,7 @@ export class ReportageService {
           }));
         }
         if (bloc.type === 'embed') clean.embed_url = bloc.embed_url || '';
-        
+
         return clean;
       }),
     };
@@ -182,6 +256,7 @@ export class ReportageService {
   static async createReportage(form: ReportageForm, onProgress?: (key: string, progress: number) => void) {
     const mediaIds = await this.uploadAllMedia(form, onProgress);
     const payload = this.preparePayload(form, mediaIds);
+    // Requête finale : JSON pur, aucun fichier -> quasi instantanée
     const response = await api.post('/reportages/', payload);
     return response;
   }
