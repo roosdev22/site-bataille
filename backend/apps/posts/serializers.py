@@ -190,7 +190,6 @@ class PostWriteSerializer(serializers.ModelSerializer):
         except Exception as e:
             if 'L\'image doit faire' in str(e):
                 raise
-            # Si erreur d'ouverture, laisser passer (PIL va valider)
             pass
         
         return value
