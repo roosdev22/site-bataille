@@ -1,12 +1,8 @@
 """
 apps/reportage/serializers.py
 """
-from io import BytesIO
-
 from django.core.exceptions import ValidationError as DjangoValidationError
-from django.core.files.base import ContentFile
 from django.db import transaction
-from PIL import Image
 from rest_framework import serializers
 
 from .models import (
@@ -51,66 +47,31 @@ class OptimizedImageSerializer(serializers.ModelSerializer):
         ]
 
 
-class OptimizedImageUploadSerializer(serializers.ModelSerializer):
-    """Écriture — upload + génération des variantes."""
+class OptimizedImageDirectCreateSerializer(serializers.ModelSerializer):
+    """
+    Écriture — le fichier a déjà été uploadé vers Supabase par le client
+    (URL signée). On ne reçoit ici que l'URL de l'original ; le signal
+    post_save se charge de télécharger cet original et de générer les
+    4 variantes WEBP (thumb/small/medium/large) en tâche de fond.
+    """
+    image_url = serializers.URLField()
 
     class Meta:
         model = OptimizedImage
-        fields = ['id', 'image', 'alt_text', 'caption', 'credit']
+        fields = ['id', 'image_url', 'alt_text', 'caption', 'credit']
         read_only_fields = ['id']
 
-    def validate_image(self, value):
-        if value.size > 50 * 1024 * 1024:
-            raise serializers.ValidationError("Image trop grande (max 50 MB).")
-        try:
-            Image.open(value)
-        except Exception:
-            raise serializers.ValidationError("Fichier invalide ou non reconnu comme image.")
-        return value
-
     def create(self, validated_data):
-        optimized_image = OptimizedImage(**validated_data)
-        original_image = validated_data['image']
-
-        pil_image = Image.open(original_image)
-        if pil_image.mode in ('RGBA', 'P'):
-            rgb_image = Image.new('RGB', pil_image.size, (255, 255, 255))
-            rgb_image.paste(
-                pil_image,
-                mask=pil_image.split()[-1] if pil_image.mode == 'RGBA' else None,
-            )
-            pil_image = rgb_image
-
-        optimized_image.width, optimized_image.height = pil_image.size
-        optimized_image.file_size = original_image.size
-
-        sizes = {
-            'image_thumb':  (150, 150),
-            'image_small':  (400, 300),
-            'image_medium': (800, 600),
-            'image_large':  (1200, 900),
-        }
-        for field_name, (max_width, max_height) in sizes.items():
-            temp = pil_image.copy()
-            temp.thumbnail((max_width, max_height), Image.Resampling.LANCZOS)
-            buffer = BytesIO()
-            temp.save(buffer, format='WEBP', quality=85, optimize=True)
-            buffer.seek(0)
-            base_name = original_image.name.split('.')[0]
-            filename = f"{base_name}_{field_name}.webp"
-            getattr(optimized_image, field_name).save(
-                filename, ContentFile(buffer.getvalue()), save=False
-            )
-
-        optimized_image.save()
-        return optimized_image
+        return OptimizedImage.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
+        # PATCH ne doit toucher qu'aux métadonnées, jamais réécrire image_url
+        validated_data.pop('image_url', None)
         instance.alt_text = validated_data.get('alt_text', instance.alt_text)
         instance.caption  = validated_data.get('caption',  instance.caption)
         instance.credit   = validated_data.get('credit',   instance.credit)
         instance.save()
-        return instance  # corrigé : était `instances`
+        return instance
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -118,16 +79,14 @@ class OptimizedImageUploadSerializer(serializers.ModelSerializer):
 # ═══════════════════════════════════════════════════════════════
 
 class MediaFileSerializer(serializers.ModelSerializer):
-    file         = serializers.FileField(write_only=True)
-    file_url     = serializers.SerializerMethodField()
-    file_size_mb = serializers.SerializerMethodField()
+    """Lecture (+ mise à jour de métadonnées) — file_url vient de Supabase, pas du FileField local."""
+    file_size_mb  = serializers.SerializerMethodField()
     thumbnail_url = serializers.SerializerMethodField()
 
     class Meta:
         model = MediaFile
         fields = [
             'id', 'title', 'media_type', 'description',
-            'file',
             'file_url', 'file_size_mb', 'duration',
             'width', 'height', 'thumbnail_url',
             'transcription', 'subtitles_file',
@@ -140,17 +99,43 @@ class MediaFileSerializer(serializers.ModelSerializer):
             return round(obj.file_size / (1024 * 1024), 2)
         return None
 
-    def get_file_url(self, obj):
-        request = self.context.get('request')
-        if obj.file:
-            return request.build_absolute_uri(obj.file.url) if request else obj.file.url
-        return None
-
     def get_thumbnail_url(self, obj):
+        # La thumbnail reste pour l'instant un ImageField local Django ;
+        # si elle est un jour uploadée vers Supabase, remplacer par obj.thumbnail_url
         request = self.context.get('request')
         if obj.thumbnail:
             return request.build_absolute_uri(obj.thumbnail.url) if request else obj.thumbnail.url
         return None
+
+
+class MediaFileDirectCreateSerializer(serializers.ModelSerializer):
+    """
+    Écriture — le fichier (vidéo/audio/document) a déjà été uploadé vers
+    Supabase par le client. On enregistre directement file_url, sans
+    passer par Django FileField ni par le stockage local Render.
+    """
+    file_url = serializers.URLField()
+    file_size = serializers.IntegerField(required=False)
+
+    class Meta:
+        model = MediaFile
+        fields = [
+            'id', 'title', 'media_type', 'description',
+            'file_url', 'file_size', 'duration', 'width', 'height',
+        ]
+        read_only_fields = ['id']
+
+    def create(self, validated_data):
+        return MediaFile.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        # PATCH ne doit toucher qu'aux métadonnées, jamais réécrire file_url
+        validated_data.pop('file_url', None)
+        for attr in ('title', 'description', 'duration', 'width', 'height'):
+            if attr in validated_data:
+                setattr(instance, attr, validated_data[attr])
+        instance.save()
+        return instance
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -224,9 +209,9 @@ class TimelineEventWriteSerializer(serializers.ModelSerializer):
         fields = ['uuid', 'date_label', 'title', 'description', 'image', 'ordre']
 
 
-# ═══════════════════════════════════════════════════════════════
+
 #  BLOC — LECTURE
-# ═══════════════════════════════════════════════════════════════
+
 
 class BlocReadSerializer(serializers.ModelSerializer):
     """Lecture seule — utilisé par ReportageDetailSerializer."""
@@ -285,9 +270,7 @@ class BlocReadSerializer(serializers.ModelSerializer):
         return None
 
 
-# ═══════════════════════════════════════════════════════════════
 #  BLOC — ÉCRITURE
-# ═══════════════════════════════════════════════════════════════
 
 class BlocWriteSerializer(serializers.ModelSerializer):
     image_id = serializers.PrimaryKeyRelatedField(
@@ -396,7 +379,7 @@ class ReportageListSerializer(serializers.ModelSerializer):
 
 
 class ReportageDetailSerializer(serializers.ModelSerializer):
-    blocs           = BlocReadSerializer(many=True, read_only=True)  # corrigé : BlocReadSerializer
+    blocs           = BlocReadSerializer(many=True, read_only=True)
     cover_image_url = serializers.SerializerMethodField()
     og_image_url    = serializers.SerializerMethodField()
     author_name     = serializers.SerializerMethodField()
@@ -473,9 +456,7 @@ class ReportageWriteSerializer(serializers.ModelSerializer):
         return instance
 
 
-# ═══════════════════════════════════════════════════════════════
 #  VUE DE REPORTAGE
-# ═══════════════════════════════════════════════════════════════
 
 class ReportageViewSerializer(serializers.ModelSerializer):
     class Meta:

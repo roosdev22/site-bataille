@@ -1,48 +1,94 @@
 # apps/reportage/views.py
+import uuid
+
 from rest_framework import status, permissions
-from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
+from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
-from django.conf import settings
-from .models import MediaFile
-from .serializers import MediaFileSerializer
 
 from .models import (
-    Reportage, ReportageStatus, ReportageView, OptimizedImage
+    Reportage, ReportageStatus, ReportageView, OptimizedImage, MediaFile
 )
 from .serializers import (
     ReportageListSerializer,
     ReportageDetailSerializer,
     ReportageWriteSerializer,
-    OptimizedImageSerializer,      # ← NOUVEAU
-    OptimizedImageUploadSerializer, # ← NOUVEAU
+    OptimizedImageSerializer,
+    OptimizedImageDirectCreateSerializer,   # ← remplace OptimizedImageUploadSerializer
+    MediaFileSerializer,
+    MediaFileDirectCreateSerializer,        # ← nouveau
 )
+from .services.storage import SupabaseStorageService
 
 
 # ═══════════════════════════════════════════════════════════════
-#  OPTIMIZED IMAGES (NOUVEAU)
+#  UPLOAD DIRECT — URL SIGNÉE SUPABASE
+# ═══════════════════════════════════════════════════════════════
+
+ALLOWED_BUCKETS = {
+    'optimized-images': SupabaseStorageService.BUCKET_OPTIMIZED_IMAGES,
+    'media-files': SupabaseStorageService.BUCKET_MEDIA_FILES,
+}
+
+
+class SignedUploadURLView(APIView):
+    """
+    POST : Génère une URL signée pour permettre au frontend d'uploader
+    directement vers Supabase, sans passer par Render.
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        bucket_key = request.data.get('bucket')
+        filename = request.data.get('filename', '')
+
+        if bucket_key not in ALLOWED_BUCKETS:
+            return Response({'error': 'Bucket invalide'}, status=status.HTTP_400_BAD_REQUEST)
+
+        ext = filename.rsplit('.', 1)[-1].lower() if '.' in filename else 'bin'
+        unique_name = f"{uuid.uuid4()}.{ext}"
+        prefix = 'optimized/' if bucket_key == 'optimized-images' else 'media/'
+        path = f"{prefix}{unique_name}"
+
+        result = SupabaseStorageService.create_signed_upload_url(
+            ALLOWED_BUCKETS[bucket_key], path
+        )
+        if not result:
+            return Response(
+                {'error': "Impossible de générer l'URL signée"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+        return Response({
+            'signed_url': result.get('signed_url') or result.get('signedUrl'),
+            'token': result.get('token'),
+            'path': path,
+        })
+
+
+# ═══════════════════════════════════════════════════════════════
+#  OPTIMIZED IMAGES
 # ═══════════════════════════════════════════════════════════════
 
 class OptimizedImageListView(APIView):
     """
     GET  : Liste toutes les images optimisées (AUTHENTIFIÉ)
-    POST : Upload une nouvelle image (AUTHENTIFIÉ)
+    POST : Enregistre une image déjà uploadée directement sur Supabase (AUTHENTIFIÉ)
     """
-    parser_classes = [MultiPartParser, FormParser, JSONParser]
+    parser_classes = [JSONParser]
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
         """Liste toutes les images de l'utilisateur."""
         images = OptimizedImage.objects.filter(uploaded_by=request.user)
-        
-        # Pagination
+
         page_size = int(request.query_params.get('page_size', 20))
         page = int(request.query_params.get('page', 1))
         start = (page - 1) * page_size
         end = start + page_size
         total = images.count()
-        images = images.order_by('-created_at')[start:end]
+        images = images.order_by('-uploaded_at')[start:end]
 
         serializer = OptimizedImageSerializer(
             images,
@@ -57,8 +103,8 @@ class OptimizedImageListView(APIView):
         })
 
     def post(self, request):
-        """Upload une nouvelle image et générer les variantes."""
-        serializer = OptimizedImageUploadSerializer(
+        """Enregistre une image déjà uploadée sur Supabase et déclenche la génération des variantes."""
+        serializer = OptimizedImageDirectCreateSerializer(
             data=request.data,
             context={'request': request}
         )
@@ -73,6 +119,53 @@ class OptimizedImageListView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class OptimizedImageDetailView(APIView):
+    """
+    GET    : Détail d'une image (AUTHENTIFIÉ)
+    PATCH  : Modifier métadonnées (AUTHENTIFIÉ)
+    DELETE : Supprimer une image (AUTHENTIFIÉ)
+    """
+    parser_classes = [JSONParser]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self, uuid):
+        return get_object_or_404(OptimizedImage, uuid=uuid)
+
+    def get(self, request, uuid):
+        image = self.get_object(uuid)
+        serializer = OptimizedImageSerializer(
+            image,
+            context={'request': request}
+        )
+        return Response(serializer.data)
+
+    def patch(self, request, uuid):
+        """Mettre à jour les métadonnées (alt_text, caption, credit)."""
+        image = self.get_object(uuid)
+        serializer = OptimizedImageDirectCreateSerializer(
+            image,
+            data=request.data,
+            context={'request': request},
+            partial=True
+        )
+        if serializer.is_valid():
+            image = serializer.save()
+            detail_serializer = OptimizedImageSerializer(
+                image,
+                context={'request': request}
+            )
+            return Response(detail_serializer.data)
+        print("ERREURS IMAGE PATCH:", serializer.errors)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, uuid):
+        image = self.get_object(uuid)
+        image.delete()
+        return Response(
+            {'message': 'Image supprimée avec succès.'},
+            status=status.HTTP_204_NO_CONTENT
+        )
+
 
 # ═══════════════════════════════════════════════════════════════
 #  MEDIA FILES (VIDÉOS/AUDIO)
@@ -81,21 +174,19 @@ class OptimizedImageListView(APIView):
 class MediaFileListView(APIView):
     """
     GET  : Liste tous les fichiers média (AUTHENTIFIÉ)
-    POST : Upload un nouveau fichier (AUTHENTIFIÉ)
+    POST : Enregistre un fichier déjà uploadé directement sur Supabase (AUTHENTIFIÉ)
     """
-    parser_classes = [MultiPartParser, FormParser, JSONParser]
+    parser_classes = [JSONParser]
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
         """Liste paginée des fichiers média."""
         media_files = MediaFile.objects.all()
-        
-        # Filtrer par type optionnel
+
         media_type = request.query_params.get('media_type')
         if media_type in ['video', 'audio']:
             media_files = media_files.filter(media_type=media_type)
 
-        # Pagination
         page_size = int(request.query_params.get('page_size', 20))
         page = int(request.query_params.get('page', 1))
         start = (page - 1) * page_size
@@ -116,8 +207,8 @@ class MediaFileListView(APIView):
         })
 
     def post(self, request):
-        """Upload un nouveau fichier média."""
-        serializer = MediaFileSerializer(
+        """Enregistre un fichier média déjà uploadé sur Supabase."""
+        serializer = MediaFileDirectCreateSerializer(
             data=request.data,
             context={'request': request}
         )
@@ -137,14 +228,13 @@ class MediaFileDetailView(APIView):
     PATCH  : Modifier métadonnées (AUTHENTIFIÉ)
     DELETE : Supprimer un fichier (AUTHENTIFIÉ)
     """
-    parser_classes = [MultiPartParser, FormParser, JSONParser]
+    parser_classes = [JSONParser]
     permission_classes = [permissions.IsAuthenticated]
 
     def get_object(self, media_id):
         return get_object_or_404(MediaFile, id=media_id)
 
     def get(self, request, media_id):
-        """Détail d'un fichier média."""
         media = self.get_object(media_id)
         serializer = MediaFileSerializer(
             media,
@@ -155,7 +245,7 @@ class MediaFileDetailView(APIView):
     def patch(self, request, media_id):
         """Mettre à jour les métadonnées."""
         media = self.get_object(media_id)
-        serializer = MediaFileSerializer(
+        serializer = MediaFileDirectCreateSerializer(
             media,
             data=request.data,
             context={'request': request},
@@ -170,65 +260,16 @@ class MediaFileDetailView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, media_id):
-        """Supprimer un fichier média."""
         media = self.get_object(media_id)
         media.delete()
         return Response(
             {'message': 'Fichier média supprimé avec succès.'},
             status=status.HTTP_204_NO_CONTENT
         )
-class OptimizedImageDetailView(APIView):
-    """
-    GET    : Détail d'une image (AUTHENTIFIÉ)
-    PATCH  : Modifier métadonnées (AUTHENTIFIÉ)
-    DELETE : Supprimer une image (AUTHENTIFIÉ)
-    """
-    parser_classes = [MultiPartParser, FormParser, JSONParser]
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get_object(self, uuid):
-        return get_object_or_404(OptimizedImage, uuid=uuid)
-
-    def get(self, request, uuid):
-        """Détail d'une image."""
-        image = self.get_object(uuid)
-        serializer = OptimizedImageSerializer(
-            image,
-            context={'request': request}
-        )
-        return Response(serializer.data)
-
-    def patch(self, request, uuid):
-        """Mettre à jour les métadonnées (alt_text, title)."""
-        image = self.get_object(uuid)
-        serializer = OptimizedImageUploadSerializer(
-            image,
-            data=request.data,
-            context={'request': request},
-            partial=True
-        )
-        if serializer.is_valid():
-            image = serializer.save()
-            detail_serializer = OptimizedImageSerializer(
-                image,
-                context={'request': request}
-            )
-            return Response(detail_serializer.data)
-        print("ERREURS IMAGE PATCH:", serializer.errors)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, uuid):
-        """Supprimer une image."""
-        image = self.get_object(uuid)
-        image.delete()
-        return Response(
-            {'message': 'Image supprimée avec succès.'},
-            status=status.HTTP_204_NO_CONTENT
-        )
 
 
 # ═══════════════════════════════════════════════════════════════
-#  REPORTAGES (EXISTANT)
+#  REPORTAGES (INCHANGÉ — garde MultiPartParser car peut recevoir des blocs JSON imbriqués)
 # ═══════════════════════════════════════════════════════════════
 
 class ReportageListView(APIView):
@@ -236,23 +277,19 @@ class ReportageListView(APIView):
     GET  : Liste tous les reportages (PUBLIC)
     POST : Crée un nouveau reportage (AUTHENTIFIÉ)
     """
-    parser_classes = [MultiPartParser, FormParser, JSONParser]
+    parser_classes = [JSONParser]
 
     def get_permissions(self):
-        """GET = public, POST = authentifié"""
         if self.request.method == 'GET':
             return [permissions.AllowAny()]
         return [permissions.IsAuthenticated()]
 
     def get(self, request):
-        """Liste paginée des reportages (PUBLIC)."""
-        # Seulement les reportages publiés pour le public
         if request.user.is_authenticated:
             reportages = Reportage.objects.select_related('author').all()
         else:
             reportages = Reportage.objects.select_related('author').filter(status='published')
 
-        # Filtres optionnels
         status_filter = request.query_params.get('status')
         if status_filter and request.user.is_authenticated:
             reportages = reportages.filter(status=status_filter)
@@ -261,7 +298,6 @@ class ReportageListView(APIView):
         if featured is not None:
             reportages = reportages.filter(featured=featured.lower() == 'true')
 
-        # Pagination simple
         page_size = int(request.query_params.get('page_size', 10))
         page = int(request.query_params.get('page', 1))
         start = (page - 1) * page_size
@@ -282,7 +318,7 @@ class ReportageListView(APIView):
         })
 
     def post(self, request):
-        """Crée un nouveau reportage avec ses blocs."""
+        """Crée un nouveau reportage avec ses blocs (plus de fichiers ici, que des IDs)."""
         serializer = ReportageWriteSerializer(
             data=request.data,
             context={'request': request}
@@ -305,10 +341,9 @@ class ReportageDetailView(APIView):
     PATCH  : Modification partielle (AUTHENTIFIÉ)
     DELETE : Supprime un reportage (AUTHENTIFIÉ)
     """
-    parser_classes = [MultiPartParser, FormParser, JSONParser]
+    parser_classes = [JSONParser]
 
     def get_permissions(self):
-        """GET = public, autres = authentifié"""
         if self.request.method == 'GET':
             return [permissions.AllowAny()]
         return [permissions.IsAuthenticated()]
@@ -320,16 +355,14 @@ class ReportageDetailView(APIView):
         )
 
     def get(self, request, slug):
-        """Détail complet du reportage (PUBLIC si publié)."""
         reportage = self.get_object(slug)
-        
-        # Bloquer l'accès aux brouillons pour les non-authentifiés
+
         if not request.user.is_authenticated and reportage.status != 'published':
             return Response(
                 {'detail': 'Reportage non trouvé.'},
                 status=status.HTTP_404_NOT_FOUND
             )
-        
+
         serializer = ReportageDetailSerializer(
             reportage,
             context={'request': request}
@@ -337,7 +370,6 @@ class ReportageDetailView(APIView):
         return Response(serializer.data)
 
     def put(self, request, slug):
-        """Modification complète du reportage."""
         reportage = self.get_object(slug)
         serializer = ReportageWriteSerializer(
             reportage,
@@ -356,7 +388,6 @@ class ReportageDetailView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def patch(self, request, slug):
-        """Modification partielle du reportage."""
         reportage = self.get_object(slug)
         serializer = ReportageWriteSerializer(
             reportage,
@@ -375,7 +406,6 @@ class ReportageDetailView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, slug):
-        """Supprime un reportage."""
         reportage = self.get_object(slug)
         reportage.delete()
         return Response(
@@ -441,19 +471,15 @@ class ReportageRecordView(APIView):
 class ReportageStatsView(APIView):
     """
     GET : Retourne les statistiques des reportages (AUTHENTIFIÉ)
-    
-    CORRIGÉ : Utilise ReportageView.objects.count() au lieu de Sum('views_count')
-    car views_count est une @property Python, pas un champ SQL.
     """
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
-        # Statistiques des reportages
         total = Reportage.objects.count()
         published = Reportage.objects.filter(status=ReportageStatus.PUBLISHED).count()
         draft = Reportage.objects.filter(status=ReportageStatus.DRAFT).count()
         review = Reportage.objects.filter(status=ReportageStatus.REVIEW).count()
-        
+
         total_views = ReportageView.objects.count()
 
         return Response({

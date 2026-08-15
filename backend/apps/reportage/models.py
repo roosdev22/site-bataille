@@ -63,9 +63,10 @@ class MediaFile(models.Model):
         upload_to='media_files/%Y/%m/%d/',
         validators=[FileExtensionValidator(
             allowed_extensions=['mp4', 'webm', 'mov', 'mp3', 'wav', 'pdf', 'doc', 'docx']
+
         )]
     )
-    
+    file_url = models.URLField(blank=True, editable=False, verbose_name="URL Supabase")
     video_format = models.CharField(
         max_length=10,
         choices=VIDEO_FORMAT_CHOICES,

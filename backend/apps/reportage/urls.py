@@ -1,5 +1,7 @@
 from django.urls import re_path
 from .views import (
+    # Upload direct
+    SignedUploadURLView,
     # Reportages
     ReportageListView,
     ReportageDetailView,
@@ -14,6 +16,11 @@ from .views import (
 )
 
 urlpatterns = [
+    # UPLOAD DIRECT — génère une URL signée Supabase (le fichier ne passe jamais par Render)
+    re_path(r'^signed-upload-url/?$',
+            SignedUploadURLView.as_view(),
+            name='signed-upload-url'),
+
     # MEDIA FILES (VIDÉOS/AUDIO) — slash optionnel : tolère le proxy Vercel
     re_path(r'^media-files/?$',
             MediaFileListView.as_view(),
