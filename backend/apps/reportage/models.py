@@ -12,9 +12,7 @@ from django.utils import timezone
 from django.utils.text import slugify
 from PIL import Image
 
-# ═══════════════════════════════════════════════════════════════
 #   CHOICES
-# ═══════════════════════════════════════════════════════════════
 
 class ReportageStatus(models.TextChoices):
     DRAFT = 'draft', 'Brouillon'
@@ -34,9 +32,6 @@ class BlocType(models.TextChoices):
     EMBED = 'embed', 'Embed'
 
 
-# ═══════════════════════════════════════════════════════════════
-#   MODÈLES MÉDIAS & ACCESSOIRES
-# ═══════════════════════════════════════════════════════════════
 
 class MediaFile(models.Model):
     """
@@ -112,13 +107,7 @@ class MediaFile(models.Model):
     def __str__(self):
         return f"{self.title} ({self.media_type})"
 
-    @property
-    def file_url(self):
-        """Retourner l'URL complète du fichier."""
-        if self.file:
-            return self.file.url
-        return None
-    
+   
     @property
     def thumbnail_url(self):
         """Retourner l'URL complète de la miniature."""
@@ -200,9 +189,9 @@ class OptimizedImage(models.Model):
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
-    # Image originale source
     image = models.ImageField(
         upload_to='optimized_images/%Y/%m/%d/',
+        blank=True, null=True,
         help_text="Image source (sera convertie en WEBP pour les variantes)"
     )
 
