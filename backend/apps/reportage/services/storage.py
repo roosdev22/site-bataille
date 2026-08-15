@@ -37,7 +37,7 @@ class SupabaseStorageService:
                 file_obj.read() if hasattr(file_obj, 'read') else file_obj,
                 {
                     "contentType": getattr(file_obj, "content_type", "image/jpeg"),
-                    "upsert": False
+                    "upsert": "false"
                 }
             )
 
@@ -60,7 +60,7 @@ class SupabaseStorageService:
                 file_obj.read() if hasattr(file_obj, 'read') else file_obj,
                 {
                     "contentType": getattr(file_obj, "content_type", "image/jpeg"),
-                    "upsert": False
+                    "upsert": "false"
                 }
             )
 
@@ -83,7 +83,7 @@ class SupabaseStorageService:
                 file_obj.read() if hasattr(file_obj, 'read') else file_obj,
                 {
                     "contentType": getattr(file_obj, "content_type", "image/jpeg"),
-                    "upsert": False
+                    "upsert": "false"
                 }
             )
 
@@ -106,7 +106,7 @@ class SupabaseStorageService:
                 file_obj.read() if hasattr(file_obj, 'read') else file_obj,
                 {
                     "contentType": content_type,
-                    "upsert": False
+                    "upsert": "false"
                 }
             )
 
@@ -133,7 +133,7 @@ class SupabaseStorageService:
         """Upload direct de bytes déjà en mémoire (variantes générées côté serveur)."""
         try:
             supabase.storage.from_(bucket).upload(
-                path, data, {"contentType": content_type, "upsert": True}
+                path, data, {"contentType": content_type, "upsert": "true"}
             )
             return supabase.storage.from_(bucket).get_public_url(path)
         except Exception as e:
