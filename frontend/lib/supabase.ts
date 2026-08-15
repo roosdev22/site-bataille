@@ -1,13 +1,13 @@
 // lib/supabase.ts
 import { createClient } from '@supabase/supabase-js';
 
-// const supabaseUrl = 'https://bskrrojwkbqhcrxbxnnm.supabase.co';
-// const supabaseAnonKey = 'sb_publishable_toT4u9tLw0HjTSbA36RjYA_yUISVOm-';
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL as string;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string;
 
-// export const supabase = createClient(supabaseUrl, supabaseAnonKey);
-
-// lib/supabase.ts ou similar
-const supabaseUrl = `https://${process.env.NEXT_PUBLIC_SUPABASE_PROJECT_ID}.supabase.co`;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+if (!supabaseUrl || !supabaseAnonKey) {
+  console.error(
+    '[lib/supabase] Variables manquantes : vérifie NEXT_PUBLIC_SUPABASE_URL et NEXT_PUBLIC_SUPABASE_ANON_KEY dans .env.local (ou Vercel Environment Variables).'
+  );
+}
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
