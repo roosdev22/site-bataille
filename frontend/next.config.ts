@@ -1,39 +1,18 @@
-// /** @type {import('next').NextConfig} */
-// const nextConfig = {
-//   images: {
-//     remotePatterns: [
-//       {
-//         protocol: 'http',
-//         hostname: 'localhost',
-//         port: '8000',
-//         pathname: '/media/**',
-//       },
-//       {
-//         protocol: 'http',
-//         hostname: '127.0.0.1',
-//         port: '8000',
-//         pathname: '/media/**',
-//       },
-//       {
-//         protocol: 'https',
-//         hostname: process.env.NEXT_PUBLIC_API_DOMAIN || 'api.example.com',
-//         pathname: '/media/**',
-//       },
-//     ],
-//     formats: ['image/avif', 'image/webp'],
-//     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
-//     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-//   },
-//   // compiler: {
-//   //   removeConsole: process.env.NODE_ENV === 'production',
-//   // },
-// };
+import type { NextConfig } from "next";
 
-// module.exports = nextConfig;
-
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+const nextConfig: NextConfig = {
   skipTrailingSlashRedirect: true,
+
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "bskrrojwkbqhcrxbxnnm.supabase.co",
+        pathname: "/storage/v1/object/public/**",
+      },
+    ],
+  },
+
   async rewrites() {
     return [
       {
@@ -44,4 +23,4 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig;
+export default nextConfig;
