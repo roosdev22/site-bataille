@@ -477,55 +477,55 @@ class Bloc(models.Model):
             models.Index(fields=['type']),
         ]
 
-def clean(self):
-    errors = {}
+    def clean(self):
+        errors = {}
 
-    if self.type == BlocType.VIDEO:
+        if self.type == BlocType.VIDEO:
 
-        sources = [
-            bool(self.video_local),
-            bool(self.video_youtube_url),
-            bool(self.video_vimeo_url),
-        ]
+            sources = [
+                bool(self.video_local),
+                bool(self.video_youtube_url),
+                bool(self.video_vimeo_url),
+            ]
 
-        if sum(sources) == 0:
+            if sum(sources) == 0:
 
-            errors['video'] = (
-                "Un bloc vidéo doit contenir une source."
+                errors['video'] = (
+                    "Un bloc vidéo doit contenir une source."
+                )
+
+            elif sum(sources) > 1:
+
+                errors['video'] = (
+                    "Une seule source vidéo est autorisée."
+                )
+
+        elif self.type == BlocType.IMAGE and not self.image:
+
+            errors['image'] = (
+                "Un bloc image requiert une image."
             )
 
-        elif sum(sources) > 1:
+        elif self.type == BlocType.AUDIO and not self.audio:
 
-            errors['video'] = (
-                "Une seule source vidéo est autorisée."
+            errors['audio'] = (
+                "Un bloc audio doit contenir un MediaFile audio."
             )
 
-    elif self.type == BlocType.IMAGE and not self.image:
+        elif self.type == BlocType.CITATION and not self.quote:
 
-        errors['image'] = (
-            "Un bloc image requiert une image."
-        )
+            errors['quote'] = (
+                "Un bloc citation requiert une citation."
+            )
 
-    elif self.type == BlocType.AUDIO and not self.audio:
+        elif self.type == BlocType.EMBED and not self.embed_url:
 
-        errors['audio'] = (
-            "Un bloc audio doit contenir un MediaFile audio."
-        )
+            errors['embed_url'] = (
+                "Une URL d'intégration est requise."
+            )
 
-    elif self.type == BlocType.CITATION and not self.quote:
-
-        errors['quote'] = (
-            "Un bloc citation requiert une citation."
-        )
-
-    elif self.type == BlocType.EMBED and not self.embed_url:
-
-        errors['embed_url'] = (
-            "Une URL d'intégration est requise."
-        )
-
-    if errors:
-        raise ValidationError(errors)
+        if errors:
+            raise ValidationError(errors)
 class GalleryImage(models.Model):
     """
     Ressources images itérées au sein d'un bloc GALLERY.
