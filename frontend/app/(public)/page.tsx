@@ -530,7 +530,7 @@ export default function PublicHomePage() {
             <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }}
               className="bg-[#f0f8f0] border border-[#c8e6c8] rounded-2xl p-10 text-center"
             >
-              <div className="text-[40px] mb-3">✅</div>
+              <div className="text-[40px] mb-3"></div>
               <h3 className="text-[#2e7d32] mb-2 font-sans">Message envoyé !</h3>
               <p className="text-[#555] text-sm font-sans mb-4">
                 Nous vous répondrons rapidement.

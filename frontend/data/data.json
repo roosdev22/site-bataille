@@ -1,25 +1,40 @@
 {
-  "name": "Jean Bataille",
-  "title": "Journaliste Médical & Rédacteur Voyage",
-  "experience": "+10 ans d'expérience",
-  "experienceSub": "Journalisme médical & voyages",
+  "name": "Dr Frantz Maria Izanne Bataille",
+  "credentials": "MD",
+  "title": "Docteur en Médecine · Journaliste Médical & Voyage",
+  "tagline": "Rendre la médecine accessible, éclairée par le monde qu'il a parcouru",
+  "experience": "+26 ans d'expérience",
+  "experienceSub": "Médecine, écriture médicale, diplomatie & voyages",
+  "quote": "J'écris beaucoup sur la médecine, le mode de vie et les gens — avec la conviction que la lumière, au sens propre comme au figuré, reste un espoir essentiel pour le bien-être humain.",
   "bio": [
-    "Avec plus d'une décennie d'expérience en rédaction médicale et journalisme de voyage, Jean a visité <strong>45+ pays</strong> et interviewé des centaines de professionnels de santé à travers le monde.",
-    "Son travail vise à rendre les sujets médicaux complexes accessibles à tous, tout en inspirant ses lecteurs à explorer le monde de manière sûre et enrichissante."
+    "Diplômé en médecine générale et chirurgie de l'<strong>Université d'État d'Haïti</strong> (1976), le Dr Bataille s'est perfectionné en chirurgie générale et médecine interne au <strong>Bronx Lebanon Hospital Center</strong> à New York.",
+    "Rédacteur médical senior pendant près de 15 ans, il consacre sa plume à rendre les sujets médicaux complexes accessibles à tous, avec un intérêt particulier pour le rôle de la lumière solaire et de la vitamine D dans la santé humaine.",
+    "En 2012, il fonde <strong>Globe Adventures Horizons</strong>, une fenêtre ouverte sur le monde mêlant récits médicaux, voyages et portraits humains. Sa carrière prend ensuite une dimension diplomatique : <strong>Ambassadeur d'Haïti en Allemagne</strong> et Chargé d'affaires à Berlin (2021-2024)."
   ],
   "stats": [
-    { "number": "45+", "label": "Pays visités" },
-    { "number": "500+", "label": "Articles publiés" },
-    { "number": "2M+", "label": "Lecteurs dans le monde" }
+    { "number": "26+", "label": "Ans d'expérience" },
+    { "number": "14+", "label": "Ans en rédaction médicale" },
+    { "number": "3", "label": "Ans comme Ambassadeur" }
+  ],
+  "specializations": [
+    { "title": "Rédaction Médicale", "desc": "Vulgarisation de sujets médicaux complexes pour le grand public" },
+    { "title": "Récits de Voyage", "desc": "Exploration de cultures, de lieux et d'aventures à travers le monde" },
+    { "title": "Diplomatie", "desc": "Représentation officielle d'Haïti en Allemagne, relations publiques" }
   ],
   "timeline": [
-    { "year": "2014", "title": "Début du journalisme médical", "desc": "Premier article sur l'innovation en santé" },
-    { "year": "2016", "title": "Reportages voyages", "desc": "Exploration du tourisme médical en Asie" },
-    { "year": "2019", "title": "Reconnaissance", "desc": "Prix du meilleur journalisme médical" },
-    { "year": "2024", "title": "Rayonnement global", "desc": "Lancement de cette plateforme" }
+    { "year": "1976", "title": "Diplôme de Médecine", "desc": "MD, Médecine générale et chirurgie — Université d'État d'Haïti" },
+    { "year": "2000", "title": "Rédacteur Médical Senior", "desc": "14 ans dédiés à l'écriture médicale et à la vulgarisation scientifique" },
+    { "year": "2012", "title": "Fondation de Globe Adventures Horizons", "desc": "CEO — plateforme de récits médicaux, voyages et découvertes" },
+    { "year": "2019", "title": "Diplomate", "desc": "Ministère Haïtien des Affaires Étrangères" },
+    { "year": "2021", "title": "Ambassadeur d'Haïti en Allemagne", "desc": "Chargé d'affaires à Berlin, République Fédérale d'Allemagne" }
   ],
   "expertise": [
-    "Rédaction Médicale", "Sécurité des Voyages", "Santé Publique",
-    "Bien-être", "Santé Numérique", "Aventure"
-  ]
+    "Rédaction Médicale", "Ghostwriting", "Freelancing", "Interprétariat Médical",
+    "Édition", "Écriture Créative", "Diplomatie", "Animation Radio",
+    "Recherche", "Relations Publiques", "Prise de Parole en Public", "Planification Stratégique"
+  ],
+  "languages": ["Français", "Anglais", "Créole Haïtien"],
+  "social": {
+    "linkedin": "https://www.linkedin.com/in/dr-frantz-maria-izanne-bataille-36938a89/"
+  }
 }
