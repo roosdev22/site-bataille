@@ -5,97 +5,96 @@ import Container from "@/components/ui/Container";
 import aboutData from "@/data/data.json";
 
 const Icons = {
-  User: () => (
+  ArrowUpRight: () => (
     <svg
-      width="40"
-      height="40"
+      width="16"
+      height="16"
       viewBox="0 0 24 24"
       fill="none"
-      stroke="#1c1c2e"
+      stroke="currentColor"
       strokeWidth="1.8"
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
     >
-      <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-      <circle cx="12" cy="7" r="4" />
+      <path d="M7 17L17 7" />
+      <path d="M7 7h10v10" />
     </svg>
   ),
 
   Clock: () => (
+    <svg
+      width="17"
+      height="17"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.7"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 7v5l3 2" />
+    </svg>
+  ),
+
+  Compass: () => (
     <svg
       width="18"
       height="18"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="2"
+      strokeWidth="1.6"
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
     >
-      <circle cx="12" cy="12" r="10" />
-      <polyline points="12 6 12 12 16 14" />
-    </svg>
-  ),
-
-  ArrowDown: () => (
-    <svg
-      width="12"
-      height="12"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <circle cx="12" cy="12" r="10" />
-      <path d="M12 6v12M8 10l4 4 4-4" />
+      <circle cx="12" cy="12" r="9" />
+      <path d="M15.5 8.5l-2.1 4.9-4.9 2.1 2.1-4.9 4.9-2.1Z" />
     </svg>
   ),
 
   Quote: () => (
     <svg
-      width="28"
-      height="28"
+      width="30"
+      height="30"
       viewBox="0 0 24 24"
       fill="currentColor"
       aria-hidden="true"
     >
-      <path d="M9.5 6C6.5 6 4 8.5 4 11.5S6.5 17 9.5 17c.3 0 .6 0 .9-.1-.6 1.8-2.1 3.3-4.1 3.9l.6 1.6c3.4-1 5.9-4.1 5.9-7.8V11c0-2.8-1.4-5-3.3-5zm10 0c-3 0-5.5 2.5-5.5 5.5S16.5 17 19.5 17c.3 0 .6 0 .9-.1-.6 1.8-2.1 3.3-4.1 3.9l.6 1.6c3.4-1 5.9-4.1 5.9-7.8V11c0-2.8-1.4-5-3.3-5z" />
-    </svg>
-  ),
-
-  Compass: () => (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="#c9a84c"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <circle cx="12" cy="12" r="10" />
-      <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" />
+      <path d="M7.5 6C5.01 6 3 8.01 3 10.5S5.01 15 7.5 15c.26 0 .52-.02.77-.07-.46 1.45-1.46 2.65-2.93 3.52l.78 1.3c2.83-1.4 4.38-3.8 4.38-7.15v-2.1C10.5 8.01 9.16 6 7.5 6Zm9 0C14.01 6 12 8.01 12 10.5s2.01 4.5 4.5 4.5c.26 0 .52-.02.77-.07-.46 1.45-1.46 2.65-2.93 3.52l.78 1.3c2.83-1.4 4.38-3.8 4.38-7.15v-2.1C19.5 8.01 18.16 6 16.5 6Z" />
     </svg>
   ),
 
   Linkedin: () => (
     <svg
-      width="16"
-      height="16"
+      width="15"
+      height="15"
       viewBox="0 0 24 24"
       fill="currentColor"
       aria-hidden="true"
     >
-      <path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.03-1.85-3.03-1.85 0-2.14 1.45-2.14 2.94v5.66H9.36V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45z" />
+      <path d="M6.5 8.5H3V21h3.5V8.5ZM4.75 3A2.05 2.05 0 1 0 4.75 7.1 2.05 2.05 0 0 0 4.75 3ZM21 13.87c0-3.76-2-5.51-4.68-5.51-2.15 0-3.11 1.18-3.65 2.01V8.5H9.17V21h3.5v-6.19c0-1.63.31-3.2 2.32-3.2 1.98 0 2.01 1.86 2.01 3.31V21H21v-7.13Z" />
     </svg>
   ),
+};
+
+type Specialization = {
+  title: string;
+  desc: string;
+};
+
+type TimelineItem = {
+  year: string;
+  title: string;
+  desc: string;
+};
+
+type Stat = {
+  number: string;
+  label: string;
 };
 
 export default function AboutSection() {
@@ -117,11 +116,14 @@ export default function AboutSection() {
   } = aboutData as typeof aboutData & {
     credentials?: string;
     tagline?: string;
+    experience?: string;
+    experienceSub?: string;
     quote?: string;
-    specializations?: {
-      title: string;
-      desc: string;
-    }[];
+    bio: string[];
+    stats: Stat[];
+    specializations?: Specialization[];
+    timeline: TimelineItem[];
+    expertise: string[];
     languages?: string[];
     social?: {
       linkedin?: string;
@@ -135,260 +137,247 @@ export default function AboutSection() {
   return (
     <section
       id="about"
-      className="overflow-hidden bg-gradient-to-b from-[#fafaf8] to-white py-16 sm:py-20 md:py-28 lg:py-32"
+      className="relative overflow-hidden bg-[#f8f7f3] py-20 sm:py-24 lg:py-32"
     >
+      {/* Décoration très discrète */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute right-[-180px] top-[-180px] h-[420px] w-[420px] rounded-full border border-[#b99a52]/10"
+      />
+
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute bottom-[-220px] left-[-180px] h-[420px] w-[420px] rounded-full border border-[#b99a52]/10"
+      />
+
       <Container>
-        {/* HEADER */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
+        {/* =====================================================
+            INTRODUCTION
+        ===================================================== */}
+        <motion.header
+          initial={{ opacity: 0, y: 18 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="mb-10 px-2 text-center sm:mb-12 md:mb-16"
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.7 }}
+          className="max-w-5xl"
         >
-          <div
-            className="mb-4 inline-flex items-center gap-1.5 rounded-full
-            bg-[#c9a84c]/10 px-3 py-1.5 text-[10px] font-bold
-            uppercase tracking-[0.15em] text-[#c9a84c]
-            sm:mb-6 sm:gap-2 sm:px-4 sm:py-2 sm:text-[11px]"
-          >
-            <Icons.ArrowDown />
-            À propos de l'auteur
+          <div className="mb-6 flex items-center gap-4">
+            <span className="h-px w-10 bg-[#b99a52]" />
+
+            <span className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[#8b7440] sm:text-[11px]">
+              À propos
+            </span>
           </div>
 
-          <h2
-            className="mb-1 text-2xl font-extrabold tracking-[-0.5px]
-            text-[#1c1c2e] sm:mb-2 sm:text-3xl md:text-4xl
-            lg:text-5xl sm:tracking-[-1px]"
-          >
-            {firstName}{" "}
-            <span className="text-[#c9a84c]">{lastName}</span>
+          <div className="grid gap-8 lg:grid-cols-[1fr_320px] lg:items-end">
+            <div>
+              <h2 className="font-serif text-4xl font-medium leading-[1.05] tracking-[-0.03em] text-[#20202b] sm:text-5xl md:text-6xl lg:text-[72px]">
+                {firstName}
+                <br />
 
-            {credentials && (
-              <sup
-                className="ml-1 align-super text-xs font-bold
-                text-[#c9a84c] sm:ml-1.5 sm:text-sm md:text-base"
-              >
-                {credentials}
-              </sup>
-            )}
-          </h2>
+                <span className="text-[#a88942]">{lastName}</span>
 
-          <p className="mx-auto max-w-md px-4 text-sm text-gray-500 sm:text-base md:text-lg">
-            {title}
-          </p>
+                {credentials && (
+                  <sup className="ml-2 align-super font-sans text-sm font-semibold tracking-normal text-[#a88942] sm:text-base">
+                    {credentials}
+                  </sup>
+                )}
+              </h2>
+            </div>
 
-          {tagline && (
-            <p
-              className="mx-auto mt-2 max-w-lg px-4 text-xs italic
-              text-gray-400 sm:mt-3 sm:text-sm"
-            >
-              {tagline}
-            </p>
-          )}
-        </motion.div>
+            <div className="border-l border-[#d9d4c8] pl-5 lg:mb-1">
+              <p className="text-sm font-medium leading-relaxed text-[#34343e] sm:text-base">
+                {title}
+              </p>
 
-        {/* CONTENU PRINCIPAL */}
-        <div className="grid grid-cols-1 gap-8 sm:gap-10 md:gap-12 lg:grid-cols-5 lg:gap-16">
-          {/* COLONNE GAUCHE */}
+              {tagline && (
+                <p className="mt-3 text-xs italic leading-relaxed text-[#77736b] sm:text-sm">
+                  {tagline}
+                </p>
+              )}
+            </div>
+          </div>
+        </motion.header>
+
+        <div className="my-12 h-px bg-[#dedbd3] sm:my-16 lg:my-20" />
+
+        {/* =====================================================
+            CONTENU PRINCIPAL
+        ===================================================== */}
+        <div className="grid gap-14 lg:grid-cols-[minmax(0,1.45fr)_minmax(300px,0.75fr)] lg:gap-20 xl:gap-28">
+          {/* =================================================
+              COLONNE PRINCIPALE
+          ================================================= */}
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{
-              duration: 0.7,
-              ease: "easeOut",
-            }}
-            className="space-y-6 lg:col-span-3 sm:space-y-8"
+            initial={{ opacity: 0, y: 25 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-70px" }}
+            transition={{ duration: 0.7 }}
           >
             {/* EXPÉRIENCE */}
-            <div className="flex flex-col items-start gap-4 sm:flex-row sm:gap-6">
-              <div
-                className="flex h-16 w-16 shrink-0 items-center justify-center
-                rounded-2xl bg-gradient-to-br from-[#c9a84c] to-[#e0c86e]
-                shadow-xl shadow-[#c9a84c]/20
-                sm:h-20 sm:w-20 sm:rounded-3xl md:h-24 md:w-24"
-              >
-                <div className="scale-75 sm:scale-100">
-                  <Icons.User />
-                </div>
-              </div>
-
+            <div className="mb-10 flex items-start justify-between gap-6 border-b border-[#dedbd3] pb-7">
               <div>
-                <h3 className="text-base font-bold text-[#1c1c2e] sm:text-lg md:text-xl">
+                <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#a88942]">
+                  Parcours professionnel
+                </p>
+
+                <h3 className="font-serif text-2xl text-[#20202b] sm:text-3xl">
                   {experience}
                 </h3>
 
-                <p className="mt-0.5 text-xs text-gray-500 sm:mt-1 sm:text-sm md:text-base">
+                <p className="mt-2 max-w-xl text-sm text-[#77736b]">
                   {experienceSub}
                 </p>
+              </div>
+
+              <div className="hidden shrink-0 text-[#a88942] sm:block">
+                <Icons.Clock />
               </div>
             </div>
 
             {/* BIOGRAPHIE */}
-            <div className="space-y-3 text-sm leading-relaxed text-gray-600 sm:space-y-4 sm:text-[15px]">
+            <div className="max-w-3xl space-y-6">
               {bio.map((paragraph, index) => (
                 <p
                   key={index}
-                  dangerouslySetInnerHTML={{
-                    __html: paragraph,
-                  }}
+                  className={`text-[15px] leading-[1.9] text-[#57555a] sm:text-base ${
+                    index === 0
+                      ? "first-letter:font-serif first-letter:text-3xl first-letter:font-medium first-letter:text-[#a88942]"
+                      : ""
+                  }`}
+                  dangerouslySetInnerHTML={{ __html: paragraph }}
                 />
               ))}
             </div>
 
             {/* CITATION */}
             {quote && (
-              <div className="relative border-l-2 border-[#c9a84c]/30 pl-5 sm:pl-6">
-                <div className="mb-1 text-[#c9a84c]/40">
+              <div className="my-12 border-y border-[#dedbd3] py-8 sm:my-14 sm:py-10">
+                <div className="mb-4 text-[#b99a52]/60">
                   <Icons.Quote />
                 </div>
 
-                <p className="text-sm font-medium italic leading-relaxed text-[#1c1c2e] sm:text-base">
+                <blockquote className="max-w-3xl font-serif text-xl italic leading-[1.6] text-[#292934] sm:text-2xl">
                   {quote}
-                </p>
+                </blockquote>
               </div>
             )}
 
             {/* SPÉCIALISATIONS */}
             {specializations && specializations.length > 0 && (
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
-                {specializations.map((spec) => (
-                  <div
-                    key={spec.title}
-                    className="rounded-2xl border border-gray-100
-                    bg-white p-3 shadow-sm sm:p-4"
-                  >
-                    <div className="mb-1.5 sm:mb-2">
-                      <Icons.Compass />
+              <div>
+                <div className="mb-7 flex items-center gap-3">
+                  <Icons.Compass />
+
+                  <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-[#4b4850]">
+                    Domaines d'activité
+                  </h3>
+                </div>
+
+                <div className="grid border-t border-[#dedbd3] sm:grid-cols-3">
+                  {specializations.map((spec, index) => (
+                    <div
+                      key={spec.title}
+                      className={`py-6 sm:px-5 ${
+                        index !== 0
+                          ? "border-t border-[#dedbd3] sm:border-l sm:border-t-0"
+                          : ""
+                      }`}
+                    >
+                      <span className="mb-4 block text-[10px] font-semibold tracking-[0.18em] text-[#b99a52]">
+                        0{index + 1}
+                      </span>
+
+                      <h4 className="font-serif text-lg text-[#25252f]">
+                        {spec.title}
+                      </h4>
+
+                      <p className="mt-2 text-xs leading-relaxed text-[#77736b]">
+                        {spec.desc}
+                      </p>
                     </div>
-
-                    <h4 className="text-xs font-bold leading-snug text-[#1c1c2e] sm:text-sm">
-                      {spec.title}
-                    </h4>
-
-                    <p className="mt-1 text-[10px] leading-relaxed text-gray-500 sm:text-[11px]">
-                      {spec.desc}
-                    </p>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             )}
 
             {/* STATISTIQUES */}
-            <div
-              className="grid grid-cols-1 divide-y divide-gray-100
-              overflow-hidden rounded-2xl border border-gray-100
-              bg-gradient-to-r from-gray-50 to-white
-              sm:grid-cols-3 sm:divide-x sm:divide-y-0
-              sm:rounded-3xl"
-            >
-              {stats.map((stat) => (
+            <div className="mt-12 grid border-y border-[#dedbd3] sm:grid-cols-3">
+              {stats.map((stat, index) => (
                 <div
                   key={stat.label}
-                  className="px-4 py-4 text-center sm:py-6 md:py-8"
+                  className={`py-7 sm:px-6 ${
+                    index !== 0
+                      ? "border-t border-[#dedbd3] sm:border-l sm:border-t-0"
+                      : ""
+                  }`}
                 >
-                  <div className="text-xl font-black tracking-tight text-[#c9a84c] sm:text-2xl md:text-3xl">
+                  <div className="font-serif text-3xl text-[#a88942] sm:text-4xl">
                     {stat.number}
                   </div>
 
-                  <div
-                    className="mt-1 text-[10px] font-semibold uppercase
-                    tracking-wider text-gray-500 sm:mt-2 sm:text-[11px]"
-                  >
+                  <p className="mt-2 text-[10px] font-semibold uppercase tracking-[0.15em] text-[#77736b]">
                     {stat.label}
-                  </div>
+                  </p>
                 </div>
               ))}
             </div>
           </motion.div>
 
-          {/* COLONNE DROITE */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{
-              duration: 0.7,
-              ease: "easeOut",
-              delay: 0.1,
-            }}
-            className="space-y-6 lg:col-span-2 sm:space-y-8"
+          {/* =================================================
+              SIDEBAR
+          ================================================= */}
+          <motion.aside
+            initial={{ opacity: 0, y: 25 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-70px" }}
+            transition={{ duration: 0.7, delay: 0.1 }}
           >
             {/* PARCOURS */}
-            <div
-              className="rounded-2xl border border-gray-100
-              bg-white p-4 shadow-sm sm:rounded-3xl sm:p-6 md:p-8"
-            >
-              <h3
-                className="mb-5 flex items-center gap-2 text-sm
-                font-bold text-[#1c1c2e] sm:mb-6 sm:text-base md:mb-8 md:text-lg"
-              >
+            <div>
+              <div className="mb-7 flex items-center justify-between border-b border-[#dedbd3] pb-4">
+                <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-[#4b4850]">
+                  Chronologie
+                </h3>
+
                 <Icons.Clock />
-                Parcours
-              </h3>
+              </div>
 
               <div className="relative">
-                <div
-                  className="absolute bottom-2 left-[17px] top-2 w-px bg-gray-100
-                  sm:left-[22px] md:left-[27px]"
-                />
+                <div className="absolute bottom-2 left-[4px] top-2 w-px bg-[#d9d4c8]" />
 
-                <div className="space-y-4 sm:space-y-5 md:space-y-6">
+                <div className="space-y-7">
                   {timeline.map((item, index) => (
                     <motion.div
                       key={`${item.year}-${item.title}`}
-                      initial={{
-                        opacity: 0,
-                        x: 20,
-                      }}
-                      whileInView={{
-                        opacity: 1,
-                        x: 0,
-                      }}
-                      viewport={{
-                        once: true,
-                      }}
+                      initial={{ opacity: 0, x: 12 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
                       transition={{
-                        delay: index * 0.1,
+                        duration: 0.45,
+                        delay: index * 0.06,
                       }}
-                      className="relative flex gap-3 sm:gap-4 md:gap-5"
+                      className="relative pl-7"
                     >
-                      <div
-                        className={`relative z-10 mt-0.5 h-[11px] w-[11px]
-                        shrink-0 rounded-full border-[3px]
-                        sm:h-[13px] sm:w-[13px] sm:border-4
-                        md:h-[15px] md:w-[15px]
-                        ${
+                      <span
+                        className={`absolute left-0 top-1.5 h-[9px] w-[9px] rounded-full border-2 ${
                           index === timeline.length - 1
-                            ? "border-[#c9a84c]/20 bg-[#c9a84c]"
-                            : "border-gray-200 bg-white"
+                            ? "border-[#a88942] bg-[#a88942]"
+                            : "border-[#b99a52] bg-[#f8f7f3]"
                         }`}
                       />
 
-                      <div className="min-w-0">
-                        <span
-                          className="text-[10px] font-bold tracking-wider
-                          text-[#c9a84c] sm:text-[11px] md:text-xs"
-                        >
-                          {item.year}
-                        </span>
+                      <span className="text-[10px] font-bold tracking-[0.16em] text-[#a88942]">
+                        {item.year}
+                      </span>
 
-                        <h4
-                          className="mt-0.5 text-[11px] font-semibold
-                          leading-snug text-[#1c1c2e]
-                          sm:text-xs md:text-sm"
-                        >
-                          {item.title}
-                        </h4>
+                      <h4 className="mt-1 font-serif text-base leading-snug text-[#292934]">
+                        {item.title}
+                      </h4>
 
-                        <p
-                          className="mt-0.5 text-[10px] leading-relaxed
-                          text-gray-500 sm:mt-1 sm:text-[11px] md:text-xs"
-                        >
-                          {item.desc}
-                        </p>
-                      </div>
+                      <p className="mt-1.5 text-xs leading-relaxed text-[#77736b]">
+                        {item.desc}
+                      </p>
                     </motion.div>
                   ))}
                 </div>
@@ -396,68 +385,74 @@ export default function AboutSection() {
             </div>
 
             {/* EXPERTISE */}
-            <div className="rounded-2xl bg-[#1c1c2e] p-4 text-white sm:rounded-3xl sm:p-6 md:p-8">
-              <h3
-                className="mb-3 text-[11px] font-bold uppercase
-                tracking-wider text-[#c9a84c]
-                sm:mb-4 sm:text-xs md:mb-5 md:text-sm"
-              >
+            <div className="mt-14 border-t border-[#dedbd3] pt-7">
+              <h3 className="mb-5 text-xs font-semibold uppercase tracking-[0.2em] text-[#4b4850]">
                 Expertise
               </h3>
 
-              <div className="flex flex-wrap gap-1.5 sm:gap-2">
+              <div className="flex flex-wrap gap-x-2 gap-y-2">
                 {expertise.map((tag) => (
                   <span
                     key={tag}
-                    className="cursor-default rounded-xl border
-                    border-white/10 bg-white/5 px-2.5 py-1
-                    text-[10px] font-semibold text-white/70
-                    transition-all duration-300
-                    hover:border-white/20 hover:bg-white/10
-                    hover:text-white sm:rounded-2xl sm:px-3
-                    sm:py-1.5 sm:text-[11px] md:px-4 md:py-2 md:text-xs"
+                    className="border border-[#d9d4c8] bg-[#f8f7f3] px-3 py-1.5 text-[10px] font-medium text-[#626067] transition-colors duration-200 hover:border-[#b99a52] hover:text-[#8b7440]"
                   >
                     {tag}
                   </span>
                 ))}
               </div>
-
-              {/* LANGUES + LINKEDIN */}
-              {(languages?.length || social?.linkedin) ? (
-                <div
-                  className="mt-5 flex flex-col gap-3 border-t
-                  border-white/10 pt-4
-                  sm:mt-6 sm:flex-row sm:items-center
-                  sm:justify-between sm:gap-2 sm:pt-5"
-                >
-                  {languages && languages.length > 0 && (
-                    <p className="text-[10px] text-white/50 sm:text-[11px]">
-                      {languages.join(" · ")}
-                    </p>
-                  )}
-
-                  {social?.linkedin && (
-                    <a
-                      href={social.linkedin}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label="Voir le profil LinkedIn"
-                      className="inline-flex items-center gap-1.5
-                      text-[10px] font-semibold text-white/70
-                      transition-colors duration-300
-                      hover:text-[#c9a84c]
-                      sm:text-[11px]"
-                    >
-                      <Icons.Linkedin />
-                      LinkedIn
-                    </a>
-                  )}
-                </div>
-              ) : null}
             </div>
-          </motion.div>
+
+            {/* LANGUES + LINKEDIN */}
+            <div className="mt-10 border-t border-[#dedbd3] pt-6">
+              {languages && languages.length > 0 && (
+                <div>
+                  <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#99948a]">
+                    Langues
+                  </p>
+
+                  <p className="text-sm text-[#4e4b52]">
+                    {languages.join(" · ")}
+                  </p>
+                </div>
+              )}
+
+              {social?.linkedin && (
+                <a
+                  href={social.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Voir le profil LinkedIn du Dr Frantz Maria Izanne Bataille"
+                  className="mt-6 inline-flex items-center gap-2 text-xs font-semibold text-[#4e4b52] transition-colors duration-200 hover:text-[#a88942]"
+                >
+                  <Icons.Linkedin />
+                  LinkedIn
+                  <Icons.ArrowUpRight />
+                </a>
+              )}
+            </div>
+          </motion.aside>
         </div>
+
+        {/* =====================================================
+            SIGNATURE VISUELLE
+        ===================================================== */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1 }}
+          className="mt-16 flex items-center gap-4 sm:mt-20"
+        >
+          <span className="h-px flex-1 bg-[#dedbd3]" />
+
+          <span className="font-serif text-sm italic text-[#a88942]">
+            Médecine · Écriture · Monde
+          </span>
+
+          <span className="h-px flex-1 bg-[#dedbd3]" />
+        </motion.div>
       </Container>
     </section>
   );
 }
+
