@@ -7,18 +7,35 @@ import aboutData from "@/data/data.json";
 const Icons = {
   ArrowUpRight: () => (
     <svg
-      width="16"
-      height="16"
+      width="15"
+      height="15"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.8"
+      strokeWidth="1.7"
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
     >
       <path d="M7 17L17 7" />
       <path d="M7 7h10v10" />
+    </svg>
+  ),
+
+  ArrowRight: () => (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.7"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M5 12h14" />
+      <path d="m13 6 6 6-6 6" />
     </svg>
   ),
 
@@ -29,7 +46,7 @@ const Icons = {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.7"
+      strokeWidth="1.6"
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
@@ -46,25 +63,25 @@ const Icons = {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.6"
+      strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
     >
       <circle cx="12" cy="12" r="9" />
-      <path d="M15.5 8.5l-2.1 4.9-4.9 2.1 2.1-4.9 4.9-2.1Z" />
+      <path d="m15.5 8.5-2.1 4.9-4.9 2.1 2.1-4.9 4.9-2.1Z" />
     </svg>
   ),
 
   Quote: () => (
     <svg
-      width="30"
-      height="30"
+      width="34"
+      height="34"
       viewBox="0 0 24 24"
       fill="currentColor"
       aria-hidden="true"
     >
-      <path d="M7.5 6C5.01 6 3 8.01 3 10.5S5.01 15 7.5 15c.26 0 .52-.02.77-.07-.46 1.45-1.46 2.65-2.93 3.52l.78 1.3c2.83-1.4 4.38-3.8 4.38-7.15v-2.1C10.5 8.01 9.16 6 7.5 6Zm9 0C14.01 6 12 8.01 12 10.5s2.01 4.5 4.5 4.5c.26 0 .52-.02.77-.07-.46 1.45-1.46 2.65-2.93 3.52l.78 1.3c2.83-1.4 4.38-3.8 4.38-7.15v-2.1C19.5 8.01 18.16 6 16.5 6Z" />
+      <path d="M7.4 6C4.97 6 3 7.97 3 10.4s1.97 4.4 4.4 4.4c.27 0 .53-.02.78-.07-.47 1.45-1.48 2.66-3 3.52l.75 1.3c2.86-1.38 4.45-3.81 4.45-7.15v-2C10.38 7.97 9.48 6 7.4 6Zm9.2 0c-2.43 0-4.4 1.97-4.4 4.4s1.97 4.4 4.4 4.4c.27 0 .53-.02.78-.07-.47 1.45-1.48 2.66-3 3.52l.75 1.3c2.86-1.38 4.45-3.81 4.45-7.15v-2C19.58 7.97 18.68 6 16.6 6Z" />
     </svg>
   ),
 
@@ -137,61 +154,60 @@ export default function AboutSection() {
   return (
     <section
       id="about"
-      className="relative overflow-hidden bg-[#f8f7f3] py-20 sm:py-24 lg:py-32"
+      className="relative overflow-hidden bg-[#f7f6f2] py-20 sm:py-24 lg:py-32"
     >
-      {/* Décoration très discrète */}
+      {/* Décoration éditoriale */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute right-[-180px] top-[-180px] h-[420px] w-[420px] rounded-full border border-[#b99a52]/10"
+        className="pointer-events-none absolute right-0 top-0 h-[500px] w-[500px] translate-x-1/3 -translate-y-1/3 rounded-full border border-[#b79a59]/10"
       />
 
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute bottom-[-220px] left-[-180px] h-[420px] w-[420px] rounded-full border border-[#b99a52]/10"
+        className="pointer-events-none absolute bottom-0 left-0 h-[400px] w-[400px] -translate-x-1/3 translate-y-1/3 rounded-full border border-[#b79a59]/10"
       />
 
       <Container>
         {/* =====================================================
-            INTRODUCTION
+            HEADER
         ===================================================== */}
+
         <motion.header
-          initial={{ opacity: 0, y: 18 }}
+          initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.7 }}
-          className="max-w-5xl"
         >
-          <div className="mb-6 flex items-center gap-4">
-            <span className="h-px w-10 bg-[#b99a52]" />
+          <div className="flex items-center gap-4">
+            <span className="h-px w-12 bg-[#b39450]" />
 
-            <span className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[#8b7440] sm:text-[11px]">
-              À propos
+            <span className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[#927840]">
+              Portrait
             </span>
           </div>
 
-          <div className="grid gap-8 lg:grid-cols-[1fr_320px] lg:items-end">
+          <div className="mt-7 grid gap-10 lg:grid-cols-[1fr_360px] lg:items-end lg:gap-16">
             <div>
-              <h2 className="font-serif text-4xl font-medium leading-[1.05] tracking-[-0.03em] text-[#20202b] sm:text-5xl md:text-6xl lg:text-[72px]">
+              <h2 className="font-serif text-[clamp(3rem,8vw,7rem)] font-medium leading-[0.9] tracking-[-0.045em] text-[#20212a]">
                 {firstName}
                 <br />
-
-                <span className="text-[#a88942]">{lastName}</span>
+                <span className="text-[#a68745]">{lastName}</span>
 
                 {credentials && (
-                  <sup className="ml-2 align-super font-sans text-sm font-semibold tracking-normal text-[#a88942] sm:text-base">
+                  <sup className="ml-2 align-super font-sans text-sm font-semibold tracking-normal text-[#a68745] sm:text-base">
                     {credentials}
                   </sup>
                 )}
               </h2>
             </div>
 
-            <div className="border-l border-[#d9d4c8] pl-5 lg:mb-1">
-              <p className="text-sm font-medium leading-relaxed text-[#34343e] sm:text-base">
+            <div className="border-l border-[#d5d0c5] pl-6">
+              <p className="text-sm font-medium leading-7 text-[#34343c] sm:text-base">
                 {title}
               </p>
 
               {tagline && (
-                <p className="mt-3 text-xs italic leading-relaxed text-[#77736b] sm:text-sm">
+                <p className="mt-4 font-serif text-sm italic leading-6 text-[#77736b] sm:text-[15px]">
                   {tagline}
                 </p>
               )}
@@ -199,183 +215,211 @@ export default function AboutSection() {
           </div>
         </motion.header>
 
-        <div className="my-12 h-px bg-[#dedbd3] sm:my-16 lg:my-20" />
+        <div className="my-12 h-px bg-[#dcd8ce] sm:my-16 lg:my-20" />
 
         {/* =====================================================
-            CONTENU PRINCIPAL
+            INTRO + BIO
         ===================================================== */}
-        <div className="grid gap-14 lg:grid-cols-[minmax(0,1.45fr)_minmax(300px,0.75fr)] lg:gap-20 xl:gap-28">
-          {/* =================================================
-              COLONNE PRINCIPALE
-          ================================================= */}
-          <motion.div
+
+        <div className="grid gap-14 lg:grid-cols-[minmax(0,1.2fr)_minmax(300px,0.8fr)] lg:gap-24">
+          <motion.main
             initial={{ opacity: 0, y: 25 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-70px" }}
             transition={{ duration: 0.7 }}
           >
-            {/* EXPÉRIENCE */}
-            <div className="mb-10 flex items-start justify-between gap-6 border-b border-[#dedbd3] pb-7">
-              <div>
-                <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#a88942]">
-                  Parcours professionnel
-                </p>
+            {/* EXPERIENCE */}
 
-                <h3 className="font-serif text-2xl text-[#20202b] sm:text-3xl">
+            <div className="flex items-start justify-between border-b border-[#dcd8ce] pb-7">
+              <div>
+                <span className="text-[10px] font-semibold uppercase tracking-[0.24em] text-[#a68745]">
+                  Expérience
+                </span>
+
+                <h3 className="mt-3 font-serif text-2xl text-[#22232d] sm:text-3xl">
                   {experience}
                 </h3>
 
-                <p className="mt-2 max-w-xl text-sm text-[#77736b]">
+                <p className="mt-2 max-w-xl text-sm leading-6 text-[#77736b]">
                   {experienceSub}
                 </p>
               </div>
 
-              <div className="hidden shrink-0 text-[#a88942] sm:block">
+              <div className="hidden text-[#a68745] sm:block">
                 <Icons.Clock />
               </div>
             </div>
 
             {/* BIOGRAPHIE */}
-            <div className="max-w-3xl space-y-6">
+
+            <div className="mt-10 max-w-3xl space-y-6">
               {bio.map((paragraph, index) => (
                 <p
                   key={index}
-                  className={`text-[15px] leading-[1.9] text-[#57555a] sm:text-base ${
+                  className={`text-[15px] leading-[1.95] text-[#56545a] sm:text-base ${
                     index === 0
-                      ? "first-letter:font-serif first-letter:text-3xl first-letter:font-medium first-letter:text-[#a88942]"
+                      ? "first-letter:font-serif first-letter:text-5xl first-letter:font-medium first-letter:text-[#a68745]"
                       : ""
                   }`}
-                  dangerouslySetInnerHTML={{ __html: paragraph }}
+                  dangerouslySetInnerHTML={{
+                    __html: paragraph,
+                  }}
                 />
               ))}
             </div>
 
             {/* CITATION */}
+
             {quote && (
-              <div className="my-12 border-y border-[#dedbd3] py-8 sm:my-14 sm:py-10">
-                <div className="mb-4 text-[#b99a52]/60">
+              <motion.div
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8 }}
+                className="relative my-14 border-y border-[#dcd8ce] py-9 sm:my-16 sm:py-11"
+              >
+                <div className="mb-5 text-[#a68745]/50">
                   <Icons.Quote />
                 </div>
 
-                <blockquote className="max-w-3xl font-serif text-xl italic leading-[1.6] text-[#292934] sm:text-2xl">
+                <blockquote className="max-w-3xl font-serif text-xl italic leading-[1.65] text-[#292a34] sm:text-2xl lg:text-[26px]">
                   {quote}
                 </blockquote>
-              </div>
+              </motion.div>
             )}
 
-            {/* SPÉCIALISATIONS */}
+            {/* DOMAINES */}
+
             {specializations && specializations.length > 0 && (
               <div>
                 <div className="mb-7 flex items-center gap-3">
-                  <Icons.Compass />
+                  <span className="text-[#a68745]">
+                    <Icons.Compass />
+                  </span>
 
-                  <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-[#4b4850]">
+                  <h3 className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#55525a]">
                     Domaines d'activité
                   </h3>
                 </div>
 
-                <div className="grid border-t border-[#dedbd3] sm:grid-cols-3">
-                  {specializations.map((spec, index) => (
-                    <div
-                      key={spec.title}
-                      className={`py-6 sm:px-5 ${
-                        index !== 0
-                          ? "border-t border-[#dedbd3] sm:border-l sm:border-t-0"
+                <div className="grid border-t border-[#dcd8ce] sm:grid-cols-3">
+                  {specializations.map((item, index) => (
+                    <motion.div
+                      key={item.title}
+                      initial={{ opacity: 0, y: 15 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{
+                        duration: 0.5,
+                        delay: index * 0.08,
+                      }}
+                      className={`py-7 sm:px-5 ${
+                        index > 0
+                          ? "border-t border-[#dcd8ce] sm:border-l sm:border-t-0"
                           : ""
                       }`}
                     >
-                      <span className="mb-4 block text-[10px] font-semibold tracking-[0.18em] text-[#b99a52]">
+                      <span className="text-[10px] font-semibold tracking-[0.2em] text-[#b29453]">
                         0{index + 1}
                       </span>
 
-                      <h4 className="font-serif text-lg text-[#25252f]">
-                        {spec.title}
+                      <h4 className="mt-4 font-serif text-lg text-[#282933]">
+                        {item.title}
                       </h4>
 
-                      <p className="mt-2 text-xs leading-relaxed text-[#77736b]">
-                        {spec.desc}
+                      <p className="mt-3 text-xs leading-6 text-[#77736b]">
+                        {item.desc}
                       </p>
-                    </div>
+
+                      <div className="mt-5 text-[#b29453]">
+                        <Icons.ArrowRight />
+                      </div>
+                    </motion.div>
                   ))}
                 </div>
               </div>
             )}
 
             {/* STATISTIQUES */}
-            <div className="mt-12 grid border-y border-[#dedbd3] sm:grid-cols-3">
+
+            <div className="mt-12 grid border-y border-[#dcd8ce] sm:grid-cols-3">
               {stats.map((stat, index) => (
                 <div
                   key={stat.label}
-                  className={`py-7 sm:px-6 ${
-                    index !== 0
-                      ? "border-t border-[#dedbd3] sm:border-l sm:border-t-0"
+                  className={`py-7 ${
+                    index > 0
+                      ? "border-t border-[#dcd8ce] sm:border-l sm:border-t-0 sm:pl-6"
                       : ""
                   }`}
                 >
-                  <div className="font-serif text-3xl text-[#a88942] sm:text-4xl">
+                  <div className="font-serif text-4xl tracking-[-0.03em] text-[#a68745]">
                     {stat.number}
                   </div>
 
-                  <p className="mt-2 text-[10px] font-semibold uppercase tracking-[0.15em] text-[#77736b]">
+                  <p className="mt-2 max-w-[150px] text-[10px] font-semibold uppercase leading-4 tracking-[0.16em] text-[#77736b]">
                     {stat.label}
                   </p>
                 </div>
               ))}
             </div>
-          </motion.div>
+          </motion.main>
 
-          {/* =================================================
+          {/* =====================================================
               SIDEBAR
-          ================================================= */}
+          ===================================================== */}
+
           <motion.aside
             initial={{ opacity: 0, y: 25 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-70px" }}
-            transition={{ duration: 0.7, delay: 0.1 }}
+            transition={{ duration: 0.7, delay: 0.12 }}
           >
-            {/* PARCOURS */}
+            {/* CHRONOLOGIE */}
+
             <div>
-              <div className="mb-7 flex items-center justify-between border-b border-[#dedbd3] pb-4">
-                <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-[#4b4850]">
-                  Chronologie
+              <div className="flex items-center justify-between border-b border-[#dcd8ce] pb-4">
+                <h3 className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#55525a]">
+                  Parcours
                 </h3>
 
-                <Icons.Clock />
+                <span className="text-[#a68745]">
+                  <Icons.Clock />
+                </span>
               </div>
 
-              <div className="relative">
-                <div className="absolute bottom-2 left-[4px] top-2 w-px bg-[#d9d4c8]" />
+              <div className="relative mt-8">
+                <div className="absolute bottom-2 left-[4px] top-2 w-px bg-[#d5d0c5]" />
 
-                <div className="space-y-7">
+                <div className="space-y-8">
                   {timeline.map((item, index) => (
                     <motion.div
                       key={`${item.year}-${item.title}`}
-                      initial={{ opacity: 0, x: 12 }}
+                      initial={{ opacity: 0, x: 15 }}
                       whileInView={{ opacity: 1, x: 0 }}
                       viewport={{ once: true }}
                       transition={{
                         duration: 0.45,
-                        delay: index * 0.06,
+                        delay: index * 0.08,
                       }}
                       className="relative pl-7"
                     >
                       <span
-                        className={`absolute left-0 top-1.5 h-[9px] w-[9px] rounded-full border-2 ${
+                        className={`absolute left-0 top-[5px] h-[9px] w-[9px] rounded-full border-2 ${
                           index === timeline.length - 1
-                            ? "border-[#a88942] bg-[#a88942]"
-                            : "border-[#b99a52] bg-[#f8f7f3]"
+                            ? "border-[#a68745] bg-[#a68745]"
+                            : "border-[#b29453] bg-[#f7f6f2]"
                         }`}
                       />
 
-                      <span className="text-[10px] font-bold tracking-[0.16em] text-[#a88942]">
+                      <span className="text-[10px] font-bold tracking-[0.18em] text-[#a68745]">
                         {item.year}
                       </span>
 
-                      <h4 className="mt-1 font-serif text-base leading-snug text-[#292934]">
+                      <h4 className="mt-1.5 font-serif text-[17px] leading-snug text-[#292a34]">
                         {item.title}
                       </h4>
 
-                      <p className="mt-1.5 text-xs leading-relaxed text-[#77736b]">
+                      <p className="mt-2 text-xs leading-6 text-[#77736b]">
                         {item.desc}
                       </p>
                     </motion.div>
@@ -385,16 +429,17 @@ export default function AboutSection() {
             </div>
 
             {/* EXPERTISE */}
-            <div className="mt-14 border-t border-[#dedbd3] pt-7">
-              <h3 className="mb-5 text-xs font-semibold uppercase tracking-[0.2em] text-[#4b4850]">
+
+            <div className="mt-14 border-t border-[#dcd8ce] pt-7">
+              <h3 className="mb-6 text-[10px] font-semibold uppercase tracking-[0.25em] text-[#55525a]">
                 Expertise
               </h3>
 
-              <div className="flex flex-wrap gap-x-2 gap-y-2">
+              <div className="flex flex-wrap gap-2">
                 {expertise.map((tag) => (
                   <span
                     key={tag}
-                    className="border border-[#d9d4c8] bg-[#f8f7f3] px-3 py-1.5 text-[10px] font-medium text-[#626067] transition-colors duration-200 hover:border-[#b99a52] hover:text-[#8b7440]"
+                    className="border border-[#d6d1c6] px-3 py-2 text-[10px] font-medium text-[#625f65] transition-all duration-200 hover:border-[#a68745] hover:bg-[#a68745]/5 hover:text-[#8c7139]"
                   >
                     {tag}
                   </span>
@@ -402,57 +447,71 @@ export default function AboutSection() {
               </div>
             </div>
 
-            {/* LANGUES + LINKEDIN */}
-            <div className="mt-10 border-t border-[#dedbd3] pt-6">
-              {languages && languages.length > 0 && (
-                <div>
-                  <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#99948a]">
-                    Langues
-                  </p>
+            {/* LANGUES */}
 
-                  <p className="text-sm text-[#4e4b52]">
-                    {languages.join(" · ")}
-                  </p>
+            {languages && languages.length > 0 && (
+              <div className="mt-12 border-t border-[#dcd8ce] pt-7">
+                <h3 className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#55525a]">
+                  Langues
+                </h3>
+
+                <div className="mt-4 flex flex-wrap gap-x-3 gap-y-2">
+                  {languages.map((language) => (
+                    <span
+                      key={language}
+                      className="text-sm text-[#55525d]"
+                    >
+                      {language}
+                    </span>
+                  ))}
                 </div>
-              )}
+              </div>
+            )}
 
-              {social?.linkedin && (
+            {/* LINKEDIN */}
+
+            {social?.linkedin && (
+              <div className="mt-10 border-t border-[#dcd8ce] pt-6">
                 <a
                   href={social.linkedin}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Voir le profil LinkedIn du Dr Frantz Maria Izanne Bataille"
-                  className="mt-6 inline-flex items-center gap-2 text-xs font-semibold text-[#4e4b52] transition-colors duration-200 hover:text-[#a88942]"
+                  className="group inline-flex items-center gap-2 text-xs font-semibold text-[#4e4b52] transition-colors hover:text-[#a68745]"
                 >
                   <Icons.Linkedin />
-                  LinkedIn
-                  <Icons.ArrowUpRight />
+
+                  <span>Profil professionnel</span>
+
+                  <span className="transition-transform duration-200 group-hover:translate-x-1 group-hover:-translate-y-1">
+                    <Icons.ArrowUpRight />
+                  </span>
                 </a>
-              )}
-            </div>
+              </div>
+            )}
           </motion.aside>
         </div>
 
         {/* =====================================================
-            SIGNATURE VISUELLE
+            SIGNATURE
         ===================================================== */}
+
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 1 }}
-          className="mt-16 flex items-center gap-4 sm:mt-20"
+          className="mt-20 flex items-center gap-5 sm:mt-24"
         >
-          <span className="h-px flex-1 bg-[#dedbd3]" />
+          <span className="h-px flex-1 bg-[#dcd8ce]" />
 
-          <span className="font-serif text-sm italic text-[#a88942]">
+          <span className="font-serif text-sm italic tracking-wide text-[#a68745]">
             Médecine · Écriture · Monde
           </span>
 
-          <span className="h-px flex-1 bg-[#dedbd3]" />
+          <span className="h-px flex-1 bg-[#dcd8ce]" />
         </motion.div>
       </Container>
     </section>
   );
 }
-
