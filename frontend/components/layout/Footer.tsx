@@ -41,7 +41,7 @@ const socialIcons = {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.7"
+      strokeWidth={1.7}
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
@@ -59,7 +59,7 @@ const socialIcons = {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.7"
+      strokeWidth={1.7}
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
@@ -70,15 +70,17 @@ const socialIcons = {
   ),
 };
 
+type SocialData = {
+  linkedin?: string;
+  facebook?: string;
+  instagram?: string;
+};
+
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   const { social } = aboutData as typeof aboutData & {
-    social?: {
-      linkedin?: string;
-      facebook?: string;
-      instagram?: string;
-    };
+    social?: SocialData;
   };
 
   const socialLinks = [
@@ -97,11 +99,17 @@ export default function Footer() {
       href: social?.instagram,
       icon: socialIcons.instagram,
     },
-  ].filter((item) => item.href);
+  ].filter(
+    (item): item is {
+      label: string;
+      href: string;
+      icon: () => React.JSX.Element;
+    } => Boolean(item.href)
+  );
 
   return (
     <footer className="relative overflow-hidden bg-[#20212a] text-white">
-      {/* Décoration */}
+      {/* Décorations */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -right-40 -top-40 h-[420px] w-[420px] rounded-full border border-[#a68745]/10"
@@ -113,9 +121,7 @@ export default function Footer() {
       />
 
       <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-10">
-        {/* =========================================
-            CITATION / INTRODUCTION
-        ========================================= */}
+        {/* Citation */}
         <div className="border-b border-white/10 py-14 sm:py-16 lg:py-20">
           <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
             <div className="max-w-3xl">
@@ -133,19 +139,17 @@ export default function Footer() {
               </p>
             </div>
 
-            <div className="hidden text-right lg:block">
-              <span className="font-display text-6xl italic text-[#a68745]/20">
+            <div className="hidden lg:block">
+              <span className="font-display text-7xl italic text-[#a68745]/20">
                 B
               </span>
             </div>
           </div>
         </div>
 
-        {/* =========================================
-            CONTENU PRINCIPAL
-        ========================================= */}
+        {/* Contenu */}
         <div className="grid gap-12 py-14 sm:py-16 md:grid-cols-2 lg:grid-cols-[1.5fr_0.7fr_0.8fr] lg:gap-20 lg:py-20">
-          {/* MARQUE */}
+          {/* Identité */}
           <div>
             <Link
               href="/"
@@ -177,7 +181,7 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* NAVIGATION */}
+          {/* Navigation */}
           <div>
             <h3 className="mb-6 text-[10px] font-semibold uppercase tracking-[0.25em] text-[#a68745]">
               Navigation
@@ -193,7 +197,7 @@ export default function Footer() {
                     >
                       <span>{link.label}</span>
 
-                      <span className="translate-x-[-4px] opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100">
+                      <span className="-translate-x-1 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100">
                         {socialIcons.arrowUpRight()}
                       </span>
                     </Link>
@@ -203,7 +207,7 @@ export default function Footer() {
             </nav>
           </div>
 
-          {/* RÉSEAUX */}
+          {/* Réseaux sociaux */}
           <div>
             <h3 className="mb-6 text-[10px] font-semibold uppercase tracking-[0.25em] text-[#a68745]">
               Réseaux
@@ -211,25 +215,25 @@ export default function Footer() {
 
             {socialLinks.length > 0 ? (
               <div className="space-y-3">
-                {socialLinks.map((social) => {
-                  const Icon = social.icon;
+                {socialLinks.map((item) => {
+                  const Icon = item.icon;
 
                   return (
                     <a
-                      key={social.label}
-                      href={social.href}
+                      key={item.label}
+                      href={item.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      aria-label={`Visiter ${social.label}`}
+                      aria-label={`Visiter ${item.label}`}
                       className="group flex w-fit items-center gap-3 text-sm text-white/45 transition-colors duration-300 hover:text-white"
                     >
                       <span className="flex h-9 w-9 items-center justify-center border border-white/10 transition-all duration-300 group-hover:border-[#a68745]/50 group-hover:text-[#a68745]">
                         <Icon />
                       </span>
 
-                      <span>{social.label}</span>
+                      <span>{item.label}</span>
 
-                      <span className="translate-x-[-3px] opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100">
+                      <span className="-translate-x-1 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100">
                         {socialIcons.arrowUpRight()}
                       </span>
                     </a>
@@ -244,9 +248,7 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* =========================================
-            LIGNE FINALE
-        ========================================= */}
+        {/* Copyright */}
         <div className="border-t border-white/10 py-7">
           <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-[11px] leading-5 text-white/25">
