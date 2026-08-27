@@ -7,6 +7,21 @@ import api from "@/lib/api";
 import AdminSidebar from "@/components/admin/admin-sidebar";
 import AdminHeader from "@/components/admin/admin-header";
 
+
+import { Fraunces, Inter } from "next/font/google";
+
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  variable: "--font-display",
+  weight: ["400", "500", "600"],
+  style: ["normal", "italic"],
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-body",
+});
+
 export default function AdminLayout({
   children,
 }: {

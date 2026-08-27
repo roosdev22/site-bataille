@@ -148,6 +148,7 @@ export default function AboutSection() {
   };
 
   const nameParts = name.trim().split(/\s+/);
+
   const firstName = nameParts[0];
   const lastName = nameParts.slice(1).join(" ");
 
@@ -156,7 +157,10 @@ export default function AboutSection() {
       id="about"
       className="relative overflow-hidden bg-[#f7f6f2] py-20 sm:py-24 lg:py-32"
     >
-      {/* Décoration éditoriale */}
+      {/* =====================================================
+          DÉCORATIONS
+      ===================================================== */}
+
       <div
         aria-hidden="true"
         className="pointer-events-none absolute right-0 top-0 h-[500px] w-[500px] translate-x-1/3 -translate-y-1/3 rounded-full border border-[#b79a59]/10"
@@ -175,31 +179,45 @@ export default function AboutSection() {
         <motion.header
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.7 }}
+          viewport={{
+            once: true,
+            margin: "-80px",
+          }}
+          transition={{
+            duration: 0.7,
+            ease: "easeOut",
+          }}
         >
           <div className="flex items-center gap-4">
             <span className="h-px w-12 bg-[#b39450]" />
 
-            <span className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[#927840]">
+            <span className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[#927840] sm:text-[11px]">
               Portrait
             </span>
           </div>
 
           <div className="mt-7 grid gap-10 lg:grid-cols-[1fr_360px] lg:items-end lg:gap-16">
+            {/* NOM */}
+
             <div>
-              <h2 className="font-serif text-[clamp(3rem,8vw,7rem)] font-medium leading-[0.9] tracking-[-0.045em] text-[#20212a]">
+              <h2 className="font-display break-words text-[clamp(2.5rem,10vw,7rem)] font-medium leading-[0.92] tracking-[-0.03em] text-[#20212a]">
                 {firstName}
+
                 <br />
-                <span className="text-[#a68745]">{lastName}</span>
+
+                <span className="italic text-[#a68745]">
+                  {lastName}
+                </span>
 
                 {credentials && (
-                  <sup className="ml-2 align-super font-sans text-sm font-semibold tracking-normal text-[#a68745] sm:text-base">
+                  <sup className="ml-2 align-super font-sans text-sm font-semibold not-italic tracking-normal text-[#a68745] sm:text-base">
                     {credentials}
                   </sup>
                 )}
               </h2>
             </div>
+
+            {/* TITRE */}
 
             <div className="border-l border-[#d5d0c5] pl-6">
               <p className="text-sm font-medium leading-7 text-[#34343c] sm:text-base">
@@ -207,7 +225,7 @@ export default function AboutSection() {
               </p>
 
               {tagline && (
-                <p className="mt-4 font-serif text-sm italic leading-6 text-[#77736b] sm:text-[15px]">
+                <p className="mt-4 font-display text-sm italic leading-6 text-[#77736b] sm:text-[15px]">
                   {tagline}
                 </p>
               )}
@@ -215,28 +233,40 @@ export default function AboutSection() {
           </div>
         </motion.header>
 
+        {/* SEPARATEUR */}
+
         <div className="my-12 h-px bg-[#dcd8ce] sm:my-16 lg:my-20" />
 
         {/* =====================================================
-            INTRO + BIO
+            CONTENU
         ===================================================== */}
 
         <div className="grid gap-14 lg:grid-cols-[minmax(0,1.2fr)_minmax(300px,0.8fr)] lg:gap-24">
+          {/* =================================================
+              COLONNE PRINCIPALE
+          ================================================= */}
+
           <motion.main
             initial={{ opacity: 0, y: 25 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-70px" }}
-            transition={{ duration: 0.7 }}
+            viewport={{
+              once: true,
+              margin: "-70px",
+            }}
+            transition={{
+              duration: 0.7,
+              ease: "easeOut",
+            }}
           >
-            {/* EXPERIENCE */}
+            {/* EXPÉRIENCE */}
 
-            <div className="flex items-start justify-between border-b border-[#dcd8ce] pb-7">
+            <div className="flex items-start justify-between gap-4 border-b border-[#dcd8ce] pb-7">
               <div>
                 <span className="text-[10px] font-semibold uppercase tracking-[0.24em] text-[#a68745]">
                   Expérience
                 </span>
 
-                <h3 className="mt-3 font-serif text-2xl text-[#22232d] sm:text-3xl">
+                <h3 className="mt-3 font-display text-2xl text-[#22232d] sm:text-3xl">
                   {experience}
                 </h3>
 
@@ -245,7 +275,7 @@ export default function AboutSection() {
                 </p>
               </div>
 
-              <div className="hidden text-[#a68745] sm:block">
+              <div className="hidden shrink-0 text-[#a68745] sm:block">
                 <Icons.Clock />
               </div>
             </div>
@@ -258,7 +288,7 @@ export default function AboutSection() {
                   key={index}
                   className={`text-[15px] leading-[1.95] text-[#56545a] sm:text-base ${
                     index === 0
-                      ? "first-letter:font-serif first-letter:text-5xl first-letter:font-medium first-letter:text-[#a68745]"
+                      ? "first-letter:float-left first-letter:mr-2 first-letter:font-display first-letter:text-6xl first-letter:font-medium first-letter:leading-[0.8] first-letter:text-[#a68745]"
                       : ""
                   }`}
                   dangerouslySetInnerHTML={{
@@ -268,79 +298,102 @@ export default function AboutSection() {
               ))}
             </div>
 
-            {/* CITATION */}
+            {/* =================================================
+                CITATION
+            ================================================= */}
 
             {quote && (
               <motion.div
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8 }}
+                initial={{
+                  opacity: 0,
+                }}
+                whileInView={{
+                  opacity: 1,
+                }}
+                viewport={{
+                  once: true,
+                }}
+                transition={{
+                  duration: 0.8,
+                }}
                 className="relative my-14 border-y border-[#dcd8ce] py-9 sm:my-16 sm:py-11"
               >
                 <div className="mb-5 text-[#a68745]/50">
                   <Icons.Quote />
                 </div>
 
-                <blockquote className="max-w-3xl font-serif text-xl italic leading-[1.65] text-[#292a34] sm:text-2xl lg:text-[26px]">
+                <blockquote className="max-w-3xl font-display text-xl italic leading-[1.65] text-[#292a34] sm:text-2xl lg:text-[26px]">
                   {quote}
                 </blockquote>
               </motion.div>
             )}
 
-            {/* DOMAINES */}
+            {/* =================================================
+                SPÉCIALISATIONS
+            ================================================= */}
 
-            {specializations && specializations.length > 0 && (
-              <div>
-                <div className="mb-7 flex items-center gap-3">
-                  <span className="text-[#a68745]">
-                    <Icons.Compass />
-                  </span>
+            {specializations &&
+              specializations.length > 0 && (
+                <div>
+                  <div className="mb-7 flex items-center gap-3">
+                    <span className="text-[#a68745]">
+                      <Icons.Compass />
+                    </span>
 
-                  <h3 className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#55525a]">
-                    Domaines d'activité
-                  </h3>
+                    <h3 className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#55525a]">
+                      Domaines d'activité
+                    </h3>
+                  </div>
+
+                  <div className="grid border-t border-[#dcd8ce] sm:grid-cols-3">
+                    {specializations.map((item, index) => (
+                      <motion.div
+                        key={item.title}
+                        initial={{
+                          opacity: 0,
+                          y: 15,
+                        }}
+                        whileInView={{
+                          opacity: 1,
+                          y: 0,
+                        }}
+                        viewport={{
+                          once: true,
+                        }}
+                        transition={{
+                          duration: 0.5,
+                          delay: index * 0.08,
+                        }}
+                        className={`group py-7 sm:px-5 ${
+                          index > 0
+                            ? "border-t border-[#dcd8ce] sm:border-l sm:border-t-0"
+                            : ""
+                        }`}
+                      >
+                        <span className="text-[10px] font-semibold tracking-[0.2em] text-[#b29453]">
+                          0{index + 1}
+                        </span>
+
+                        <h4 className="mt-4 font-display text-lg text-[#282933]">
+                          {item.title}
+                        </h4>
+
+                        <p className="mt-3 text-xs leading-6 text-[#77736b]">
+                          {item.desc}
+                        </p>
+
+                        <div className="mt-5 text-[#b29453] transition-transform duration-300 group-hover:translate-x-1">
+                          <Icons.ArrowRight />
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
                 </div>
+              )}
 
-                <div className="grid border-t border-[#dcd8ce] sm:grid-cols-3">
-                  {specializations.map((item, index) => (
-                    <motion.div
-                      key={item.title}
-                      initial={{ opacity: 0, y: 15 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{
-                        duration: 0.5,
-                        delay: index * 0.08,
-                      }}
-                      className={`py-7 sm:px-5 ${
-                        index > 0
-                          ? "border-t border-[#dcd8ce] sm:border-l sm:border-t-0"
-                          : ""
-                      }`}
-                    >
-                      <span className="text-[10px] font-semibold tracking-[0.2em] text-[#b29453]">
-                        0{index + 1}
-                      </span>
-
-                      <h4 className="mt-4 font-serif text-lg text-[#282933]">
-                        {item.title}
-                      </h4>
-
-                      <p className="mt-3 text-xs leading-6 text-[#77736b]">
-                        {item.desc}
-                      </p>
-
-                      <div className="mt-5 text-[#b29453]">
-                        <Icons.ArrowRight />
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* STATISTIQUES */}
+            {/* =================================================
+                STATISTIQUES
+            ================================================= */}
 
             <div className="mt-12 grid border-y border-[#dcd8ce] sm:grid-cols-3">
               {stats.map((stat, index) => (
@@ -352,7 +405,7 @@ export default function AboutSection() {
                       : ""
                   }`}
                 >
-                  <div className="font-serif text-4xl tracking-[-0.03em] text-[#a68745]">
+                  <div className="font-display text-4xl tracking-[-0.03em] text-[#a68745]">
                     {stat.number}
                   </div>
 
@@ -364,17 +417,31 @@ export default function AboutSection() {
             </div>
           </motion.main>
 
-          {/* =====================================================
+          {/* =================================================
               SIDEBAR
-          ===================================================== */}
+          ================================================= */}
 
           <motion.aside
-            initial={{ opacity: 0, y: 25 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-70px" }}
-            transition={{ duration: 0.7, delay: 0.12 }}
+            initial={{
+              opacity: 0,
+              y: 25,
+            }}
+            whileInView={{
+              opacity: 1,
+              y: 0,
+            }}
+            viewport={{
+              once: true,
+              margin: "-70px",
+            }}
+            transition={{
+              duration: 0.7,
+              delay: 0.12,
+            }}
           >
-            {/* CHRONOLOGIE */}
+            {/* =================================================
+                PARCOURS
+            ================================================= */}
 
             <div>
               <div className="flex items-center justify-between border-b border-[#dcd8ce] pb-4">
@@ -394,9 +461,17 @@ export default function AboutSection() {
                   {timeline.map((item, index) => (
                     <motion.div
                       key={`${item.year}-${item.title}`}
-                      initial={{ opacity: 0, x: 15 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
+                      initial={{
+                        opacity: 0,
+                        x: 15,
+                      }}
+                      whileInView={{
+                        opacity: 1,
+                        x: 0,
+                      }}
+                      viewport={{
+                        once: true,
+                      }}
                       transition={{
                         duration: 0.45,
                         delay: index * 0.08,
@@ -415,7 +490,7 @@ export default function AboutSection() {
                         {item.year}
                       </span>
 
-                      <h4 className="mt-1.5 font-serif text-[17px] leading-snug text-[#292a34]">
+                      <h4 className="mt-1.5 font-display text-[17px] leading-snug text-[#292a34]">
                         {item.title}
                       </h4>
 
@@ -428,7 +503,9 @@ export default function AboutSection() {
               </div>
             </div>
 
-            {/* EXPERTISE */}
+            {/* =================================================
+                EXPERTISE
+            ================================================= */}
 
             <div className="mt-14 border-t border-[#dcd8ce] pt-7">
               <h3 className="mb-6 text-[10px] font-semibold uppercase tracking-[0.25em] text-[#55525a]">
@@ -447,7 +524,9 @@ export default function AboutSection() {
               </div>
             </div>
 
-            {/* LANGUES */}
+            {/* =================================================
+                LANGUES
+            ================================================= */}
 
             {languages && languages.length > 0 && (
               <div className="mt-12 border-t border-[#dcd8ce] pt-7">
@@ -455,7 +534,7 @@ export default function AboutSection() {
                   Langues
                 </h3>
 
-                <div className="mt-4 flex flex-wrap gap-x-3 gap-y-2">
+                <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2">
                   {languages.map((language) => (
                     <span
                       key={language}
@@ -468,7 +547,9 @@ export default function AboutSection() {
               </div>
             )}
 
-            {/* LINKEDIN */}
+            {/* =================================================
+                LINKEDIN
+            ================================================= */}
 
             {social?.linkedin && (
               <div className="mt-10 border-t border-[#dcd8ce] pt-6">
@@ -476,14 +557,14 @@ export default function AboutSection() {
                   href={social.linkedin}
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label="Voir le profil LinkedIn du Dr Frantz Maria Izanne Bataille"
-                  className="group inline-flex items-center gap-2 text-xs font-semibold text-[#4e4b52] transition-colors hover:text-[#a68745]"
+                  aria-label={`Voir le profil LinkedIn de ${name}`}
+                  className="group inline-flex items-center gap-2 text-xs font-semibold text-[#4e4b52] transition-colors duration-200 hover:text-[#a68745]"
                 >
                   <Icons.Linkedin />
 
                   <span>Profil professionnel</span>
 
-                  <span className="transition-transform duration-200 group-hover:translate-x-1 group-hover:-translate-y-1">
+                  <span className="transition-transform duration-200 group-hover:-translate-y-1 group-hover:translate-x-1">
                     <Icons.ArrowUpRight />
                   </span>
                 </a>
@@ -497,15 +578,23 @@ export default function AboutSection() {
         ===================================================== */}
 
         <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1 }}
+          initial={{
+            opacity: 0,
+          }}
+          whileInView={{
+            opacity: 1,
+          }}
+          viewport={{
+            once: true,
+          }}
+          transition={{
+            duration: 1,
+          }}
           className="mt-20 flex items-center gap-5 sm:mt-24"
         >
           <span className="h-px flex-1 bg-[#dcd8ce]" />
 
-          <span className="font-serif text-sm italic tracking-wide text-[#a68745]">
+          <span className="font-display text-sm italic tracking-wide text-[#a68745]">
             Médecine · Écriture · Monde
           </span>
 
